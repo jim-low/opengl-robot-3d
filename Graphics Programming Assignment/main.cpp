@@ -2,19 +2,7 @@
 #include <gl/GL.h>
 #include <cmath>
 
-#define WINDOW_TITLE "Bigass Robot Simulator"
-
-float posX = 0;
-float posY = 0;
-float addX = 0.000005;
-float addY = 0.0001;
-float min = -1;
-float max = 1;
-
-float rotateAngle = 0;
-
-float clearTimer = 10;
-float clearCounter = 0;
+#define WINDOW_TITLE "BigASS Robot Simulator"
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -64,14 +52,9 @@ bool initPixelFormat(HDC hdc)
 
 void display()
 {
-
-	glBegin(GL_LINES);
-	glColor3f(1.0, 1.0, 1.0);
-	glLineWidth(10);
-	glVertex2f(cos(rotateAngle) * 0.01 + posX, sin(rotateAngle) * 0.01 + posY);
-	glVertex2f(cos(rotateAngle + 3.141) * 0.01 + posX, sin(rotateAngle + 3.141) * 0.01 + posY);
-	glEnd();
-
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glLoadIdentity();
 }
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
@@ -111,17 +94,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-
-		if (posX > max || posX < min)
-			addX *= -1;
-
-		if (posY > max || posY < min)
-			addY *= -1;
-
-		posX += addX;
-		posY += addY;
-
-		rotateAngle += 0.02;
 
 		display();
 

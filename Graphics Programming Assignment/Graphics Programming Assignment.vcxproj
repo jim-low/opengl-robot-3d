@@ -131,11 +131,13 @@
   <ItemGroup>
     <ClCompile Include="Body.cpp" />
     <ClCompile Include="Hand.cpp" />
+    <ClCompile Include="Legs.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Body.h" />
     <ClInclude Include="Vector3.h" />
+    <ClInclude Include="Legs.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
