@@ -4,17 +4,6 @@
 
 #define WINDOW_TITLE "Bigass Robot Simulator"
 
-float posX = 0;
-float posY = 0;
-float addX = 0.000005;
-float addY = 0.0001;
-float min = -1;
-float max = 1;
-
-float rotateAngle = 0;
-
-float clearTimer = 10;
-float clearCounter = 0;
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -25,6 +14,94 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		break;
 	case WM_KEYDOWN:
 		if (wParam == VK_ESCAPE) PostQuitMessage(0);
+		else if (wParam == 'O') isOrtho = true;		// ortho projecttion (O)
+		else if (wParam == 'P') isOrtho = false;	// perspective (P)
+		else if (wParam == VK_UP) {					// move obj up
+			if (isOrtho) {
+				if (objZ > oNear) {
+					objZ -= objSpeed;
+				}
+			}
+			else {
+				if (objZ > pNear) {
+					objZ -= objSpeed;
+				}
+			}
+		}
+		else if (wParam == VK_DOWN) {				// move obj down
+			if (isOrtho) {
+				if (objZ < oFar) {
+					objZ += objSpeed;
+				}
+			}
+			else {
+				if (objZ < pFar) {
+					objZ += objSpeed;
+				}
+			}
+		}
+		else if (wParam == VK_SHIFT) {
+			positiveTransform = !positiveTransform;
+		}
+		else if (wParam == VK_SPACE) {
+			lArmRot_X = 0;
+			lArmRot_Y = 0;
+			lArmRot_Z = 0;
+			uArmRot_X = 0;
+			uArmRot_Y = 0;
+			uArmRot_Z = 0;
+		}
+		else if (wParam == 'A') ptx -= ptSpeed;		//-------------------------
+		else if (wParam == 'D') ptx += ptSpeed;		// projecttion translation
+		else if (wParam == 'S') pty -= ptSpeed;		// (W,A,S,D)
+		else if (wParam == 'W') pty += ptSpeed;		//-------------------------
+		else if (wParam == 'I') prx -= prSpeed;		//-------------------------
+		else if (wParam == 'K') prx += prSpeed;		// projection rotation
+		else if (wParam == 'J') pry -= prSpeed;		// (I,J,K,L)
+		else if (wParam == 'L') pry += prSpeed;		//-------------------------
+
+		// lowerArm rotate X
+		else if (wParam == 'Z') {
+			if (lArmRot_X < 90 && positiveTransform)
+				lArmRot_X += lArmRot;
+			if (lArmRot_X > 0 && !positiveTransform)
+				lArmRot_X -= lArmRot;
+		}
+		// lowerArm rotate Y
+		else if (wParam == 'X') {
+			if (lArmRot_Y < 90 && positiveTransform)
+				lArmRot_Y += lArmRot;
+			if (lArmRot_Y > 0 && !positiveTransform)
+				lArmRot_Y -= lArmRot;
+		}
+		// lowerArm rotate Z
+		else if (wParam == 'C') {
+			if (lArmRot_Z < 90 && positiveTransform)
+				lArmRot_Z += lArmRot;
+			if (lArmRot_Z > 0 && !positiveTransform)
+				lArmRot_Z -= lArmRot;
+		}
+		// upperArm rotate X
+		else if (wParam == 'V') {
+			if (uArmRot_X < 90 && positiveTransform)
+				uArmRot_X += uArmRot;
+			if (uArmRot_X > 0 && !positiveTransform)
+				uArmRot_X -= uArmRot;
+		}
+		// upperArm rotate Y
+		else if (wParam == 'B') {
+			if (uArmRot_Y < 90 && positiveTransform)
+				uArmRot_Y += uArmRot;
+			if (uArmRot_Y > 0 && !positiveTransform)
+				uArmRot_Y -= uArmRot;
+		}
+		// upperArm rotate Z
+		else if (wParam == 'N') {
+			if (uArmRot_Z < 90 && positiveTransform)
+				uArmRot_Z += uArmRot;
+			if (uArmRot_Z > 0 && !positiveTransform)
+				uArmRot_Z -= uArmRot;
+		}
 		break;
 	default:
 		break;
@@ -65,12 +142,7 @@ bool initPixelFormat(HDC hdc)
 void display()
 {
 
-	glBegin(GL_LINES);
-	glColor3f(1.0, 1.0, 1.0);
-	glLineWidth(10);
-	glVertex2f(cos(rotateAngle) * 0.01 + posX, sin(rotateAngle) * 0.01 + posY);
-	glVertex2f(cos(rotateAngle + 3.141) * 0.01 + posX, sin(rotateAngle + 3.141) * 0.01 + posY);
-	glEnd();
+
 
 }
 

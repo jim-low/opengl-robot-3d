@@ -6,5 +6,3 @@ public:
 	float y;
 	float z;
 };
-
-#pragma once
