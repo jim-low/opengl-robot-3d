@@ -2,7 +2,7 @@
 #include <gl/GL.h>
 #include <cmath>
 
-#define WINDOW_TITLE "Bigass Robot Simulator"
+#define WINDOW_TITLE "BigASS Robot Simulator"
 
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
