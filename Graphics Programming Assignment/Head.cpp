@@ -1,5 +1,5 @@
 #include "Head.h"
 
-void draw() {
+void Head::draw() {
 
 }

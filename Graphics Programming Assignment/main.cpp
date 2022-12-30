@@ -1,11 +1,16 @@
 #include <Windows.h>
+#include <cstdio>
+#include <iostream>
 #include <gl/GL.h>
+#include <gl/GLU.h>
 #include <cmath>
 #include "Body.h"
 #include "Hand.h"
 #include "Legs.h"
 #include "Head.h"
 
+#pragma comment (lib, "OpenGL32.lib")
+#pragma comment (lib, "GLU32.lib")
 #define WINDOW_TITLE "BigASS Robot Simulator"
 
 // body part objects
@@ -14,11 +19,14 @@ Hand* hand = new Hand();
 Legs* legs = new Legs();
 Head* head = new Head();
 
-// switch mode 1-head, 2-body, 3- hand, 4-leg
-int mode = 0;
+// switch mode 1-head, 2-body, 3-hand, 4-leg
+int mode = 3;
 
 // projection
-bool isOrtho = false;					//	projection view type
+float objZ = 0.0f, objSpeed = 0.1f;		//	object translate in z-axis
+float oNear = -10.0f, oFar = 10.0f;			//	ortho near & far
+float ptx = 0.0f, pty = 0.0f, ptSpeed = 0.1f;	//	translation for projection
+float prx = 0.0f, pry = 0.0f, prSpeed = 5;			//	rotation for projection
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -29,106 +37,95 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		break;
 	case WM_KEYDOWN:
 		if (wParam == VK_ESCAPE) PostQuitMessage(0);
-		else if (wParam == 1) {
-
-		}
-		else if (wParam == 2) {					
-
-		}
-		else if (wParam == 3) {						
-			if (wParam == VK_UP) {					// move obj up
-				if (isOrtho) {
-					if (objZ > oNear) {
-						objZ -= objSpeed;
-					}
-				}
-				else {
-					if (objZ > pNear) {
-						objZ -= objSpeed;
-					}
-				}
-			}
-			else if (wParam == VK_DOWN) {				// move obj down
-				if (isOrtho) {
-					if (objZ < hand->oFar) {
-						objZ += objSpeed;
-					}
-				}
-				else {
-					if (objZ < pFar) {
-						objZ += objSpeed;
-					}
-				}
-			}
-			else if (wParam == VK_SHIFT) {
-				positiveTransform = !positiveTransform;
-			}
-			else if (wParam == VK_SPACE) {
-				lArmRot_X = 0;
-				lArmRot_Y = 0;
-				lArmRot_Z = 0;
-				uArmRot_X = 0;
-				uArmRot_Y = 0;
-				uArmRot_Z = 0;
-			}
-			else if (wParam == 'A') ptx -= ptSpeed;		//-------------------------
-			else if (wParam == 'D') ptx += ptSpeed;		// projecttion translation
-			else if (wParam == 'S') pty -= ptSpeed;		// (W,A,S,D)
-			else if (wParam == 'W') pty += ptSpeed;		//-------------------------
-			else if (wParam == 'I') prx -= prSpeed;		//-------------------------
-			else if (wParam == 'K') prx += prSpeed;		// projection rotation
-			else if (wParam == 'J') pry -= prSpeed;		// (I,J,K,L)
-			else if (wParam == 'L') pry += prSpeed;		//-------------------------
-
-			// lowerArm rotate X
-			else if (wParam == 'Z') {
-				if (lArmRot_X < 90 && positiveTransform)
-					lArmRot_X += lArmRot;
-				if (lArmRot_X > 0 && !positiveTransform)
-					lArmRot_X -= lArmRot;
-			}
-			// lowerArm rotate Y
-			else if (wParam == 'X') {
-				if (lArmRot_Y < 90 && positiveTransform)
-					lArmRot_Y += lArmRot;
-				if (lArmRot_Y > 0 && !positiveTransform)
-					lArmRot_Y -= lArmRot;
-			}
-			// lowerArm rotate Z
-			else if (wParam == 'C') {
-				if (lArmRot_Z < 90 && positiveTransform)
-					lArmRot_Z += lArmRot;
-				if (lArmRot_Z > 0 && !positiveTransform)
-					lArmRot_Z -= lArmRot;
-			}
-			// upperArm rotate X
-			else if (wParam == 'V') {
-				if (uArmRot_X < 90 && positiveTransform)
-					uArmRot_X += uArmRot;
-				if (uArmRot_X > 0 && !positiveTransform)
-					uArmRot_X -= uArmRot;
-			}
-			// upperArm rotate Y
-			else if (wParam == 'B') {
-				if (uArmRot_Y < 90 && positiveTransform)
-					uArmRot_Y += uArmRot;
-				if (uArmRot_Y > 0 && !positiveTransform)
-					uArmRot_Y -= uArmRot;
-			}
-			// upperArm rotate Z
-			else if (wParam == 'N') {
-				if (uArmRot_Z < 90 && positiveTransform)
-					uArmRot_Z += uArmRot;
-				if (uArmRot_Z > 0 && !positiveTransform)
-					uArmRot_Z -= uArmRot;
+		if (wParam == VK_UP) {					// move obj up
+			if (objZ > oNear) {
+				objZ -= objSpeed;
 			}
 		}
-		else if (wParam == 4) {
-
+		else if (wParam == VK_DOWN) {				// move obj down
+			if (objZ < oFar) {
+				objZ += objSpeed;
+			}
 		}
-		else if (wParam == 'O') isOrtho = true;		// ortho projecttion (O)
-		else if (wParam == 'P') isOrtho = false;	// perspective (P)
+		else if (wParam == 'A') ptx -= ptSpeed;		//-------------------------
+		else if (wParam == 'D') ptx += ptSpeed;		// projecttion translation
+		else if (wParam == 'S') pty -= ptSpeed;		// (W,A,S,D)
+		else if (wParam == 'W') pty += ptSpeed;		//-------------------------
+		else if (wParam == 'I') prx -= prSpeed;		//-------------------------
+		else if (wParam == 'K') prx += prSpeed;		// projection rotation
+		else if (wParam == 'J') pry -= prSpeed;		// (I,J,K,L)
+		else if (wParam == 'L') pry += prSpeed;		//-------------------------
+		else if (wParam == 0x31) mode = 1;			// head (wing kian)
+		else if (wParam == 0x32) mode = 2;			// body (yu heng)
+		else if (wParam == 0x33) mode = 3;			// hand (zi heng)
+		else if (wParam == 0x34) mode = 4;			// legs (jim)
 		
+		switch (mode) {
+			case 1:
+				
+				break;
+			case 2:
+				break;
+			case 3:
+				if (wParam == VK_SHIFT) {
+					hand->positiveTransform = !hand->positiveTransform;
+				}
+				else if (wParam == VK_SPACE) {
+					hand->lArmRot_X = 0;
+					hand->lArmRot_Y = 0;
+					hand->lArmRot_Z = 0;
+					hand->uArmRot_X = 0;
+					hand->uArmRot_Y = 0;
+					hand->uArmRot_Z = 0;
+				}
+				// lowerArm rotate X
+				else if (wParam == 'Z') {
+					if (hand->lArmRot_X < 90 && hand->positiveTransform)
+						hand->lArmRot_X += hand->lArmRot;
+					if (hand->lArmRot_X > 0 && !hand->positiveTransform)
+						hand->lArmRot_X -= hand->lArmRot;
+				}
+				// lowerArm rotate Y
+				else if (wParam == 'X') {
+					if (hand->lArmRot_Y < 90 && hand->positiveTransform)
+						hand->lArmRot_Y += hand->lArmRot;
+					if (hand->lArmRot_Y > 0 && !hand->positiveTransform)
+						hand->lArmRot_Y -= hand->lArmRot;
+				}
+				// lowerArm rotate Z
+				else if (wParam == 'C') {
+					if (hand->lArmRot_Z < 90 && hand->positiveTransform)
+						hand->lArmRot_Z += hand->lArmRot;
+					if (hand->lArmRot_Z > 0 && !hand->positiveTransform)
+						hand->lArmRot_Z -= hand->lArmRot;
+				}
+				// upperArm rotate X
+				else if (wParam == 'V') {
+					if (hand->uArmRot_X < 90 && hand->positiveTransform)
+						hand->uArmRot_X += hand->uArmRot;
+					if (hand->uArmRot_X > 0 && !hand->positiveTransform)
+						hand->uArmRot_X -= hand->uArmRot;
+				}
+				// upperArm rotate Y
+				else if (wParam == 'B') {
+					if (hand->uArmRot_Y < 90 && hand->positiveTransform)
+						hand->uArmRot_Y += hand->uArmRot;
+					if (hand->uArmRot_Y > 0 && !hand->positiveTransform)
+						hand->uArmRot_Y -= hand->uArmRot;
+				}
+				// upperArm rotate Z
+				else if (wParam == 'N') {
+					if (hand->uArmRot_Z < 90 && hand->positiveTransform)
+						hand->uArmRot_Z += hand->uArmRot;
+					if (hand->uArmRot_Z > 0 && !hand->positiveTransform)
+						hand->uArmRot_Z -= hand->uArmRot;
+				}
+				break;
+			case 4:
+				break;
+			default:
+				break;
+		}
 		break;
 	default:
 		break;
@@ -166,12 +163,45 @@ bool initPixelFormat(HDC hdc)
 	}
 }
 
+void projection() {
+	glMatrixMode(GL_PROJECTION);	//refer to the projection matrix
+	glLoadIdentity();				//reset the projections matrix
+
+	glTranslatef(ptx, pty, 0);	//translate in x and y for projection
+	glRotatef(pry, 0, 1, 0);		//rotate in y
+	glRotatef(prx, 1, 0, 0);		//rotate in x
+}
+
 void display()
 {
-	body->draw();
-	hand->draw();
-	legs->draw();
-	head->draw();
+	//projection();
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glTranslatef(0, 0, objZ);		//zoom in and out
+	glRotatef(pry, 0, 1, 0);		//rotate in y
+	glRotatef(prx, 1, 0, 0);		//rotate in x
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+
+	switch (mode) {
+	case 1:
+		head->draw();
+		break;
+	case 2:
+		body->draw();
+		break;
+	case 3:		
+		hand->draw();		
+		break;
+	case 4:
+		legs->draw();
+		break;
+	default:
+		break;
+	}
+	
 }
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
@@ -187,7 +217,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 
 	if (!RegisterClassEx(&wc)) return false;
 
-	HWND hWnd = CreateWindow(WINDOW_TITLE, WINDOW_TITLE, WS_OVERLAPPEDWINDOW, (1920 / 2) - 400, 30, 800, 600, NULL, NULL, wc.hInstance, NULL);
+	HWND hWnd = CreateWindow(WINDOW_TITLE, WINDOW_TITLE, WS_OVERLAPPEDWINDOW, (1920 / 2) - 400, 30, 800, 800, NULL, NULL, wc.hInstance, NULL);
 
 	HDC hdc = GetDC(hWnd);
 
@@ -218,6 +248,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 	}
 
 	UnregisterClass(WINDOW_TITLE, wc.hInstance);
+
 
 	return true;
 }

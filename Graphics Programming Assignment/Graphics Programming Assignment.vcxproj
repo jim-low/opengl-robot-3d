@@ -108,7 +108,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);OpenGL32.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);OpenGL32.lib;GLU32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -134,11 +134,13 @@
     <ClCompile Include="Head.cpp" />
     <ClCompile Include="Legs.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Shapes.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Hand.h" />
     <ClInclude Include="Body.h" />
     <ClInclude Include="Head.h" />
+    <ClInclude Include="Shapes.h" />
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="Legs.h" />
   </ItemGroup>
