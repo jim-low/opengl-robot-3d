@@ -1,9 +1,7 @@
 #pragma once
-class Body
+class Head
 {
-	// function name;
 public:
-
 	void draw();
 };
 

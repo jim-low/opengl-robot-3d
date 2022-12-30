@@ -1,9 +1,24 @@
 #include <Windows.h>
 #include <gl/GL.h>
 #include <cmath>
+#include "Body.h"
+#include "Hand.h"
+#include "Legs.h"
+#include "Head.h"
 
 #define WINDOW_TITLE "BigASS Robot Simulator"
 
+// body part objects
+Body* body = new Body();
+Hand* hand = new Hand();
+Legs* legs = new Legs();
+Head* head = new Head();
+
+// switch mode 1-head, 2-body, 3- hand, 4-leg
+int mode = 0;
+
+// projection
+bool isOrtho = false;					//	projection view type
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -14,94 +29,106 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		break;
 	case WM_KEYDOWN:
 		if (wParam == VK_ESCAPE) PostQuitMessage(0);
+		else if (wParam == 1) {
+
+		}
+		else if (wParam == 2) {					
+
+		}
+		else if (wParam == 3) {						
+			if (wParam == VK_UP) {					// move obj up
+				if (isOrtho) {
+					if (objZ > oNear) {
+						objZ -= objSpeed;
+					}
+				}
+				else {
+					if (objZ > pNear) {
+						objZ -= objSpeed;
+					}
+				}
+			}
+			else if (wParam == VK_DOWN) {				// move obj down
+				if (isOrtho) {
+					if (objZ < hand->oFar) {
+						objZ += objSpeed;
+					}
+				}
+				else {
+					if (objZ < pFar) {
+						objZ += objSpeed;
+					}
+				}
+			}
+			else if (wParam == VK_SHIFT) {
+				positiveTransform = !positiveTransform;
+			}
+			else if (wParam == VK_SPACE) {
+				lArmRot_X = 0;
+				lArmRot_Y = 0;
+				lArmRot_Z = 0;
+				uArmRot_X = 0;
+				uArmRot_Y = 0;
+				uArmRot_Z = 0;
+			}
+			else if (wParam == 'A') ptx -= ptSpeed;		//-------------------------
+			else if (wParam == 'D') ptx += ptSpeed;		// projecttion translation
+			else if (wParam == 'S') pty -= ptSpeed;		// (W,A,S,D)
+			else if (wParam == 'W') pty += ptSpeed;		//-------------------------
+			else if (wParam == 'I') prx -= prSpeed;		//-------------------------
+			else if (wParam == 'K') prx += prSpeed;		// projection rotation
+			else if (wParam == 'J') pry -= prSpeed;		// (I,J,K,L)
+			else if (wParam == 'L') pry += prSpeed;		//-------------------------
+
+			// lowerArm rotate X
+			else if (wParam == 'Z') {
+				if (lArmRot_X < 90 && positiveTransform)
+					lArmRot_X += lArmRot;
+				if (lArmRot_X > 0 && !positiveTransform)
+					lArmRot_X -= lArmRot;
+			}
+			// lowerArm rotate Y
+			else if (wParam == 'X') {
+				if (lArmRot_Y < 90 && positiveTransform)
+					lArmRot_Y += lArmRot;
+				if (lArmRot_Y > 0 && !positiveTransform)
+					lArmRot_Y -= lArmRot;
+			}
+			// lowerArm rotate Z
+			else if (wParam == 'C') {
+				if (lArmRot_Z < 90 && positiveTransform)
+					lArmRot_Z += lArmRot;
+				if (lArmRot_Z > 0 && !positiveTransform)
+					lArmRot_Z -= lArmRot;
+			}
+			// upperArm rotate X
+			else if (wParam == 'V') {
+				if (uArmRot_X < 90 && positiveTransform)
+					uArmRot_X += uArmRot;
+				if (uArmRot_X > 0 && !positiveTransform)
+					uArmRot_X -= uArmRot;
+			}
+			// upperArm rotate Y
+			else if (wParam == 'B') {
+				if (uArmRot_Y < 90 && positiveTransform)
+					uArmRot_Y += uArmRot;
+				if (uArmRot_Y > 0 && !positiveTransform)
+					uArmRot_Y -= uArmRot;
+			}
+			// upperArm rotate Z
+			else if (wParam == 'N') {
+				if (uArmRot_Z < 90 && positiveTransform)
+					uArmRot_Z += uArmRot;
+				if (uArmRot_Z > 0 && !positiveTransform)
+					uArmRot_Z -= uArmRot;
+			}
+		}
+		else if (wParam == 4) {
+
+		}
 		else if (wParam == 'O') isOrtho = true;		// ortho projecttion (O)
 		else if (wParam == 'P') isOrtho = false;	// perspective (P)
-		else if (wParam == VK_UP) {					// move obj up
-			if (isOrtho) {
-				if (objZ > oNear) {
-					objZ -= objSpeed;
-				}
-			}
-			else {
-				if (objZ > pNear) {
-					objZ -= objSpeed;
-				}
-			}
-		}
-		else if (wParam == VK_DOWN) {				// move obj down
-			if (isOrtho) {
-				if (objZ < oFar) {
-					objZ += objSpeed;
-				}
-			}
-			else {
-				if (objZ < pFar) {
-					objZ += objSpeed;
-				}
-			}
-		}
-		else if (wParam == VK_SHIFT) {
-			positiveTransform = !positiveTransform;
-		}
-		else if (wParam == VK_SPACE) {
-			lArmRot_X = 0;
-			lArmRot_Y = 0;
-			lArmRot_Z = 0;
-			uArmRot_X = 0;
-			uArmRot_Y = 0;
-			uArmRot_Z = 0;
-		}
-		else if (wParam == 'A') ptx -= ptSpeed;		//-------------------------
-		else if (wParam == 'D') ptx += ptSpeed;		// projecttion translation
-		else if (wParam == 'S') pty -= ptSpeed;		// (W,A,S,D)
-		else if (wParam == 'W') pty += ptSpeed;		//-------------------------
-		else if (wParam == 'I') prx -= prSpeed;		//-------------------------
-		else if (wParam == 'K') prx += prSpeed;		// projection rotation
-		else if (wParam == 'J') pry -= prSpeed;		// (I,J,K,L)
-		else if (wParam == 'L') pry += prSpeed;		//-------------------------
-
-		// lowerArm rotate X
-		else if (wParam == 'Z') {
-			if (lArmRot_X < 90 && positiveTransform)
-				lArmRot_X += lArmRot;
-			if (lArmRot_X > 0 && !positiveTransform)
-				lArmRot_X -= lArmRot;
-		}
-		// lowerArm rotate Y
-		else if (wParam == 'X') {
-			if (lArmRot_Y < 90 && positiveTransform)
-				lArmRot_Y += lArmRot;
-			if (lArmRot_Y > 0 && !positiveTransform)
-				lArmRot_Y -= lArmRot;
-		}
-		// lowerArm rotate Z
-		else if (wParam == 'C') {
-			if (lArmRot_Z < 90 && positiveTransform)
-				lArmRot_Z += lArmRot;
-			if (lArmRot_Z > 0 && !positiveTransform)
-				lArmRot_Z -= lArmRot;
-		}
-		// upperArm rotate X
-		else if (wParam == 'V') {
-			if (uArmRot_X < 90 && positiveTransform)
-				uArmRot_X += uArmRot;
-			if (uArmRot_X > 0 && !positiveTransform)
-				uArmRot_X -= uArmRot;
-		}
-		// upperArm rotate Y
-		else if (wParam == 'B') {
-			if (uArmRot_Y < 90 && positiveTransform)
-				uArmRot_Y += uArmRot;
-			if (uArmRot_Y > 0 && !positiveTransform)
-				uArmRot_Y -= uArmRot;
-		}
-		// upperArm rotate Z
-		else if (wParam == 'N') {
-			if (uArmRot_Z < 90 && positiveTransform)
-				uArmRot_Z += uArmRot;
-			if (uArmRot_Z > 0 && !positiveTransform)
-				uArmRot_Z -= uArmRot;
-		}
+		
 		break;
 	default:
 		break;
@@ -141,9 +168,10 @@ bool initPixelFormat(HDC hdc)
 
 void display()
 {
-
-
-
+	body->draw();
+	hand->draw();
+	legs->draw();
+	head->draw();
 }
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)

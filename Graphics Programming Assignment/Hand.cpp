@@ -10,7 +10,7 @@
 
 #define WINDOW_TITLE "OpenGL Window"
 
-bool isOrtho = false;					//	projection view type
+
 float objZ = 0.0f, objSpeed = 0.1f;		//	object translate in z-axis
 float oNear = -10.0f, oFar = 10.0f;			//	ortho near & far
 float pNear = 1.0f, pFar = 20.0f;				//	perspective near & far

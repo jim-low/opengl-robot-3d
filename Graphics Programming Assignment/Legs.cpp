@@ -1,5 +1,9 @@
 #include "Legs.h"
 
+void Legs::draw() {
+
+}
+
 void Legs::drawQuads()
 {
 
