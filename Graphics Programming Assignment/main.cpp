@@ -184,17 +184,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 			DispatchMessage(&msg);
 		}
 
-		if (posX > max || posX < min)
-			addX *= -1;
-
-		if (posY > max || posY < min)
-			addY *= -1;
-
-		posX += addX;
-		posY += addY;
-
-		rotateAngle += 0.02;
-
 		display();
 
 		SwapBuffers(hdc);
