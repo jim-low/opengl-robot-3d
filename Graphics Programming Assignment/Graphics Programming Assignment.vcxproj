@@ -129,13 +129,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Assignment\Hand.cpp" />
-    <ClCompile Include="..\..\Assignment\Vecctor.cpp" />
-    <ClCompile Include="..\..\Assignment\Vector3.cpp" />
+    <ClCompile Include="Hand.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Assignment\Vector3.h" />
+    <ClInclude Include="Vector3.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
