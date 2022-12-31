@@ -20,7 +20,7 @@ Legs* legs = new Legs();
 Head* head = new Head();
 
 // switch mode 1-head, 2-body, 3-hand, 4-leg
-int mode = 3;
+int mode = 4;
 
 // projection
 float objZ = 0.0f, objSpeed = 0.1f;		//	object translate in z-axis
