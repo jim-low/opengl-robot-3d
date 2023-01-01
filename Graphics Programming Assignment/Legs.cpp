@@ -18,7 +18,7 @@ void Legs::drawBelt()
 
 void Legs::drawQuads()
 {
-	Shapes::drawCube(Vector3(0, 0, 0), 0.1, 0.3, 0.7);
+	/*Shapes::drawCube(Vector3(0, 0, 0), 0.1, 0.3, 0.7);*/
 }
 
 void Legs::drawShin()

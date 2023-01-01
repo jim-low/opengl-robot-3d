@@ -10,92 +10,55 @@
 	2673
 */
 
+Vector3* p1 = new Vector3();
+Vector3* p2 = new Vector3();
+Vector3* p3 = new Vector3();
+Vector3* p4 = new Vector3();
+Vector3* p5 = new Vector3();
+Vector3* p6 = new Vector3();
+Vector3* p7 = new Vector3();
+Vector3* p8 = new Vector3();
 
 void Hand::drawPalm() {
-	GLUquadricObj* gluObj = NULL;//create quadric obj pointer
-	gluObj = gluNewQuadric();
-	gluQuadricDrawStyle(gluObj, GLU_LINE);
-
-	gluSphere(gluObj, 0.06, 30, 30);
+	Shapes::drawSphere(0.06, 30, 30, GLU_LINE);
 
 	//palm
-	glPushMatrix();
-	glBegin(GL_QUADS);
-
-
 	// upper palm
+	glPushMatrix();
 	glColor3f(1, 0, 0);
-	glVertex3f(0.05, 0.05, 0);			//	point 1
-	glVertex3f(-0.05, 0.05, 0);			//	point 2
-	glVertex3f(-0.05, -0.05, 0);		//	point 3
-	glVertex3f(0.05, -0.05, 0);			//	point 4
+	p1->setVector(0.05, 0.05, 0);
+	p2->setVector(-0.05, 0.05, 0);
+	p3->setVector(-0.05, -0.05, 0);
+	p4->setVector(0.05, -0.05, 0);
 
-	glVertex3f(0.08, 0.05, -0.08);		//	point 5
-	glVertex3f(-0.1, 0.05, -0.08);		//	point 6
-	glVertex3f(-0.1, -0.05, -0.08);		//	point 7
-	glVertex3f(0.08, -0.05, -0.08);		//	point 8
-
-	glVertex3f(0.05, 0.05, 0);			//	point 1
-	glVertex3f(0.08, 0.05, -0.08);		//	point 5
-	glVertex3f(-0.1, 0.05, -0.08);		//	point 6
-	glVertex3f(-0.05, 0.05, 0);			//	point 2
-
-	glVertex3f(0.05, -0.05, 0);			//	point 4
-	glVertex3f(0.08, -0.05, -0.08);		//	point 8
-	glVertex3f(-0.1, -0.05, -0.08);		//	point 7
-	glVertex3f(-0.05, -0.05, 0);		//	point 3
-
-	glVertex3f(0.05, 0.05, 0);			//	point 1
-	glVertex3f(0.08, 0.05, -0.08);		//	point 5
-	glVertex3f(0.08, -0.05, -0.08);		//	point 8
-	glVertex3f(0.05, -0.05, 0);			//	point 4
-
-	glVertex3f(-0.05, 0.05, 0);			//	point 2
-	glVertex3f(-0.1, 0.05, -0.08);		//	point 6
-	glVertex3f(-0.1, -0.05, -0.08);		//	point 7
-	glVertex3f(-0.05, -0.05, 0);		//	point 3
+	p5->setVector(0.08, 0.05, -0.08);
+	p6->setVector(-0.1, 0.05, -0.08);
+	p7->setVector(-0.1, -0.05, -0.08);
+	p8->setVector(0.08, -0.05, -0.08);
+	
+	Shapes::drawCube(*p1, *p2, *p3, *p4, *p5, *p6, *p7, *p8);
 
 	//lower palm
-	glVertex3f(0.05, 0.05, -0.13);		//	point 1
-	glVertex3f(-0.05, 0.05, -0.13);		//	point 2
-	glVertex3f(-0.05, -0.05, -0.13);	//	point 3
-	glVertex3f(0.05, -0.05, -0.13);		//	point 4
+	p1->setVector(0.05f, 0.05f, -0.13f);
+	p2->setVector(-0.05f, 0.05f, -0.13f);
+	p3->setVector(-0.05f, -0.05f, -0.13f);
+	p4->setVector(0.05f, -0.05f, -0.13f);
 
-	glVertex3f(0.07, 0.04, -0.08);		//	point 5
-	glVertex3f(-0.09, 0.04, -0.08);		//	point 6
-	glVertex3f(-0.09, -0.04, -0.08);		//	point 7
-	glVertex3f(0.07, -0.04, -0.08);		//	point 8
+	p5->setVector(0.08, 0.05, -0.08);
+	p6->setVector(-0.1, 0.05, -0.08);
+	p7->setVector(-0.1, -0.05, -0.08);
+	p8->setVector(0.08, -0.05, -0.08);
 
-	glVertex3f(0.05, 0.05, -0.13);		//	point 1
-	glVertex3f(0.08, 0.05, -0.08);		//	point 5
-	glVertex3f(-0.1, 0.05, -0.08);		//	point 6
-	glVertex3f(-0.05, 0.05, -0.13);		//	point 2
-
-	glVertex3f(0.05, -0.05, -0.13);		//	point 4
-	glVertex3f(0.08, -0.05, -0.08);		//	point 8
-	glVertex3f(-0.1, -0.05, -0.08);		//	point 7
-	glVertex3f(-0.05, -0.05, -0.13);	//	point 3
-
-	glVertex3f(0.05, 0.05, -0.13);		//	point 1
-	glVertex3f(0.08, 0.05, -0.08);		//	point 5
-	glVertex3f(0.08, -0.05, -0.08);		//	point 8
-	glVertex3f(0.05, -0.05, -0.13);		//	point 4
-
-	glVertex3f(-0.05, 0.05, -0.13);		//	point 2
-	glVertex3f(-0.1, 0.05, -0.08);		//	point 6
-	glVertex3f(-0.1, -0.05, -0.08);		//	point 7
-	glVertex3f(-0.05, -0.05, -0.13);	//	point 3
-
+	Shapes::drawCube(*p1, *p2, *p3, *p4, *p5, *p6, *p7, *p8);
+	
 	glColor3f(1, 1, 1);
-	glEnd();
 	glPopMatrix();
 
-	gluDeleteQuadric(gluObj);
 }
 
 void Hand::drawLowerArm() {
 	
-	Shapes::drawSphere(0.1, 30, 30, GLU_LINE); // cylinder base arm
+	Shapes::drawSphere(0.1, 30, 30, GLU_LINE); // joint
 
 	//Lower arm
 	glPushMatrix();
@@ -114,7 +77,7 @@ void Hand::drawLowerArm() {
 
 void Hand::drawUpperArm() {
 
-	Shapes::drawSphere(0.1, 30, 30, GLU_LINE); // cylinder base arm
+	Shapes::drawSphere(0.1, 30, 30, GLU_LINE); // joint
 	
 	//Upper arm
 	glPushMatrix();
@@ -135,5 +98,4 @@ void Hand::drawUpperArm() {
 void Hand::draw()
 {
 	drawUpperArm();
-	Shapes::drawSphere(0.1, 30, 30, GLU_LINE); // cylinder base arm
 }
