@@ -20,5 +20,6 @@ public:
 	void drawUpperArm();
 	void drawLowerArm();
 	void drawPalm();
+	void drawThumb();
 	void draw();
 };
