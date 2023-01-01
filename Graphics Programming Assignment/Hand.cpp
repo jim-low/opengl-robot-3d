@@ -19,41 +19,88 @@ Vector3* p6 = new Vector3();
 Vector3* p7 = new Vector3();
 Vector3* p8 = new Vector3();
 
+/*	8 point set up template
+	p1->setVector(0, 0, 0);
+	p2->setVector(0, 0, 0);
+	p3->setVector(0, 0, 0);
+	p4->setVector(0, 0, 0);				  
+	p5->setVector(0, 0, 0);
+	p6->setVector(0, 0, 0);
+	p7->setVector(0, 0, 0);
+	p8->setVector(0, 0, 0);
+*/
+
+void Hand::drawThumb() {
+	glPointSize(5);	
+	glBegin(GL_POINTS);
+
+	glColor3f(0, 1, 0);
+	glVertex3f(-0.1, 0.025, -0.08);
+
+	glColor3f(0, 0, 1);
+	glVertex3f(-0.1, -0.05, -0.08);
+
+	glEnd();
+
+	glColor3f(1, 0, 0);
+	
+	/*
+	p1->setVector(-0.1, 0.025, -0.08);
+	p2->setVector(-0.08, 0.025, -0.08);
+	p3->setVector(0.08, -0.05);
+	p4->setVector(-0.1, -0.05, -0.08);
+
+	p5->setVector(0, 0, -0.16);
+	p6->setVector(0, 0, -0.16);
+	p7->setVector(0, 0, -0.16);
+	p8->setVector(0, 0, -0.16);*/
+
+	//Shapes::drawCube(*p1, *p2, *p3, *p4, *p5, *p6, *p7, *p8);
+	Shapes::drawCuboid(*p1, 0.1, 0.3, 0.5, GL_QUADS);
+}
+
 void Hand::drawPalm() {
+	glPushMatrix();
+	glTranslatef(0,0,0.015);
 	Shapes::drawSphere(0.06, 30, 30, GLU_LINE);
 
 	//palm
-	// upper palm
 	glPushMatrix();
-	glColor3f(1, 0, 0);
-	p1->setVector(0.05, 0.05, 0);
-	p2->setVector(-0.05, 0.05, 0);
+	glTranslatef(0,0.01,-0.02);
+
+	// lower palm	
+	p1->setVector(0.05, 0.025, 0);
+	p2->setVector(-0.05, 0.025, 0);
 	p3->setVector(-0.05, -0.05, 0);
 	p4->setVector(0.05, -0.05, 0);
 
-	p5->setVector(0.08, 0.05, -0.08);
-	p6->setVector(-0.1, 0.05, -0.08);
+	p5->setVector(0.08, 0.025, -0.08);
+	p6->setVector(-0.1, 0.025, -0.08);
 	p7->setVector(-0.1, -0.05, -0.08);
 	p8->setVector(0.08, -0.05, -0.08);
 	
-	Shapes::drawCube(*p1, *p2, *p3, *p4, *p5, *p6, *p7, *p8);
+	Shapes::drawCube(*p1, *p2, *p3, *p4, *p5, *p6, *p7, *p8, GL_QUADS);
 
-	//lower palm
-	p1->setVector(0.05f, 0.05f, -0.13f);
-	p2->setVector(-0.05f, 0.05f, -0.13f);
+	//upper palm
+	p1->setVector(0.05f, 0.025f, -0.13f);
+	p2->setVector(-0.05f, 0.025f, -0.13f);
 	p3->setVector(-0.05f, -0.05f, -0.13f);
 	p4->setVector(0.05f, -0.05f, -0.13f);
 
-	p5->setVector(0.08, 0.05, -0.08);
-	p6->setVector(-0.1, 0.05, -0.08);
+	p5->setVector(0.08, 0.025, -0.08);
+	p6->setVector(-0.1, 0.025, -0.08);
 	p7->setVector(-0.1, -0.05, -0.08);
 	p8->setVector(0.08, -0.05, -0.08);
 
-	Shapes::drawCube(*p1, *p2, *p3, *p4, *p5, *p6, *p7, *p8);
+	Shapes::drawCube(*p1, *p2, *p3, *p4, *p5, *p6, *p7, *p8, GL_LINE_LOOP);
 	
+	// thumb
+	drawThumb();
+	
+
 	glColor3f(1, 1, 1);
 	glPopMatrix();
-
+	glPopMatrix();
 }
 
 void Hand::drawLowerArm() {
@@ -97,5 +144,7 @@ void Hand::drawUpperArm() {
 
 void Hand::draw()
 {
-	drawUpperArm();
+	glScalef(2,2,2);
+	drawPalm();
+	//drawUpperArm();
 }
