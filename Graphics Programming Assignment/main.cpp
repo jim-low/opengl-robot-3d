@@ -71,54 +71,70 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 					hand->positiveTransform = !hand->positiveTransform;
 				}
 				else if (wParam == VK_SPACE) {
-					hand->lArmRot_X = 0;
-					hand->lArmRot_Y = 0;
-					hand->lArmRot_Z = 0;
-					hand->uArmRot_X = 0;
-					hand->uArmRot_Y = 0;
-					hand->uArmRot_Z = 0;
+					hand->lArmRotAngle_L = 0;
+					hand->uArmRotAngle_L = 0;
+					hand->palmRotAngle_L = 0;
+					hand->lArmRotAngle_R = 0;
+					hand->uArmRotAngle_R = 0;
+					hand->palmRotAngle_R = 0;
 				}
-				// lowerArm rotate X
+				// uppwerArm rotatation
 				else if (wParam == 'Z') {
-					if (hand->lArmRot_X < 90 && hand->positiveTransform)
-						hand->lArmRot_X += hand->lArmRot;
-					if (hand->lArmRot_X > 0 && !hand->positiveTransform)
-						hand->lArmRot_X -= hand->lArmRot;
+					if (hand->uArmRotAngle_L < 180 && hand->positiveTransform)
+						hand->uArmRotAngle_L += hand->uArmRot;
+					if (hand->uArmRotAngle_L > -30 && !hand->positiveTransform)
+						hand->uArmRotAngle_L -= hand->uArmRot;
 				}
-				// lowerArm rotate Y
 				else if (wParam == 'X') {
-					if (hand->lArmRot_Y < 90 && hand->positiveTransform)
-						hand->lArmRot_Y += hand->lArmRot;
-					if (hand->lArmRot_Y > 0 && !hand->positiveTransform)
-						hand->lArmRot_Y -= hand->lArmRot;
+					if (hand->uArmRotAngle_R < 190 && hand->positiveTransform)
+						hand->uArmRotAngle_R += hand->uArmRot;
+					if (hand->uArmRotAngle_R > -30 && !hand->positiveTransform)
+						hand->uArmRotAngle_R -= hand->uArmRot;
 				}
-				// lowerArm rotate Z
 				else if (wParam == 'C') {
-					if (hand->lArmRot_Z < 90 && hand->positiveTransform)
-						hand->lArmRot_Z += hand->lArmRot;
-					if (hand->lArmRot_Z > 0 && !hand->positiveTransform)
-						hand->lArmRot_Z -= hand->lArmRot;
+					if (hand->lArmRotAngle_L < 90 && hand->positiveTransform)
+						hand->lArmRotAngle_L += hand->lArmRot;
+					if (hand->lArmRotAngle_L > 0 && !hand->positiveTransform)
+						hand->lArmRotAngle_L -= hand->lArmRot;
 				}
-				// upperArm rotate X
 				else if (wParam == 'V') {
-					if (hand->uArmRot_X < 90 && hand->positiveTransform)
-						hand->uArmRot_X += hand->uArmRot;
-					if (hand->uArmRot_X > 0 && !hand->positiveTransform)
-						hand->uArmRot_X -= hand->uArmRot;
+					if (hand->lArmRotAngle_R < 90 && hand->positiveTransform)
+						hand->lArmRotAngle_R += hand->lArmRot;
+					if (hand->lArmRotAngle_R > 0 && !hand->positiveTransform)
+						hand->lArmRotAngle_R -= hand->lArmRot;
 				}
-				// upperArm rotate Y
 				else if (wParam == 'B') {
-					if (hand->uArmRot_Y < 90 && hand->positiveTransform)
-						hand->uArmRot_Y += hand->uArmRot;
-					if (hand->uArmRot_Y > 0 && !hand->positiveTransform)
-						hand->uArmRot_Y -= hand->uArmRot;
+					if (hand->palmRotAngle_L < 90 && hand->positiveTransform)
+						hand->palmRotAngle_L += hand->palmRot;
+					if (hand->palmRotAngle_L > 0 && !hand->positiveTransform)
+						hand->palmRotAngle_L -= hand->palmRot;
 				}
-				// upperArm rotate Z
 				else if (wParam == 'N') {
-					if (hand->uArmRot_Z < 90 && hand->positiveTransform)
-						hand->uArmRot_Z += hand->uArmRot;
-					if (hand->uArmRot_Z > 0 && !hand->positiveTransform)
-						hand->uArmRot_Z -= hand->uArmRot;
+					if (hand->palmRotAngle_R < 90 && hand->positiveTransform)
+						hand->palmRotAngle_R += hand->palmRot;
+					if (hand->palmRotAngle_R > 0 && !hand->positiveTransform)
+						hand->palmRotAngle_R -= hand->palmRot;
+				}
+				else if (wParam == 'Q') {			
+					hand->uArmRotAngle_R += hand->uArmRot * hand->walkSwing;
+					hand->uArmRotAngle_L -= hand->uArmRot * hand->walkSwing;
+					if (hand->uArmRotAngle_R == -45) {
+						hand->walkSwing = 1;
+					}
+					if (hand->uArmRotAngle_R == 45) {
+						hand->walkSwing = -1;
+					}			
+				}
+				else if (wParam == 'O') {				
+					hand->isSwordOpen_L = !hand->isSwordOpen_L;
+				}
+				else if (wParam == 'P') {
+					hand->isSwordOpen_R = !hand->isSwordOpen_R;
+				}
+
+				// finger rotate X
+				else if (wParam == 'M') {
+					hand->closeFinger();
 				}
 				break;
 			case 4:
@@ -184,6 +200,7 @@ void display()
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
+	glClearColor(0.9, 0.9, 0.1, 0);
 
 	switch (mode) {
 	case 1:
