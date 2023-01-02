@@ -26,13 +26,13 @@ float prx = 0.0f, pry = 0.0f, prSpeed = 5;			//	rotation for projection
 boolean isOrtho = true;
 
 //lighting and material
-float amb[] = { 0.6, 1.0, 0.6 }; //red ambient light source
-float dif[] = { 0.6, 1.0, 0.6 }; //red diffuse light source
+float amb[] = { 1.0, 0.6, 0.6 }; //red ambient light source
+float dif[] = { 0.0, 0.0, 1.0 }; //red diffuse light source
 float posA[] = { 0.0, 0.4, 0.0 }; //ambient light from top 
 float posD[] = { 0.0, 0.4, 0.0 }; //diffsue light from right 
 
 float ambM[] = { 0.0, 1.0, 0.0 }; // red ambient material 
-float difM[] = { 0.0, 1.0, 0.0 }; // red diffuse material
+float difM[] = { 1.0, 0.0, 0.0 }; // red diffuse material
 bool isLightOn = false;				//is light on?
 
 GLuint texture = 0;  //texture name
@@ -113,6 +113,7 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			robot->hand->isSwordOpen_L = false;
 			robot->hand->isSwordOpen_R = false;
 			robot->hand->isHoldingGun = false;
+			isLightOn = false;
 		}
 		// uppwerArm rotatation
 		else if (wParam == 'Z') {
@@ -232,6 +233,25 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 				robot->hand->thumbRotAngle->z -= robot->hand->thumbRot;
 			}
 		}
+		else if (wParam == 'F') {
+			isLightOn = !isLightOn;
+		}
+		else if (wParam == 0x34)
+		{
+			glEnable(GL_LIGHT0);
+			glDisable(GL_LIGHT1);
+		}
+		else if (wParam == 0x35)
+		{
+			glEnable(GL_LIGHT1);
+			glDisable(GL_LIGHT0);
+		}
+		else if (wParam == 0x36)
+		{
+			glEnable(GL_LIGHT0);
+			glEnable(GL_LIGHT1);
+		}
+		break;
 		
 		
 	}
@@ -276,6 +296,7 @@ void projection() {
 	glRotatef(pry, 0, 1, 0);		//rotate in y
 	glRotatef(prx, 1, 0, 0);		//rotate in x
 }
+
 
 void lighting() {
 
