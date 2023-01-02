@@ -73,5 +73,8 @@
     <Image Include="Sky1.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Arc.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

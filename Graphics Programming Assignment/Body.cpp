@@ -183,15 +183,15 @@ void Body::drawArmor() {
 	glColor3f(0, 0, 0);
 	Shapes::drawCylinder(0.1, 0.1, 0.2, 30, 30, GLU_FILL);
 	glPopMatrix();*/
-	textureArray[1] = loadtexture("Arc.png");
+	textureArray[1] = loadtexture("Arc.bmp");
 	glPushMatrix();
 	glTranslatef(0, 0, 0.1);
 	glColor3f(1, 1, 1);
-	Shapes::drawSphere(0.099, 30, 30, GLU_FILL);
+	Shapes::drawSphereWithTexture(0.099, 30, 30, GLU_FILL);
 	glPopMatrix();
 	glPopMatrix();
-	glDeleteTextures(1, &textureArray[1]);
 	glDisable(GL_TEXTURE_2D);
+	glDeleteTextures(1, &textureArray[1]);
 
 
 	glPushMatrix();

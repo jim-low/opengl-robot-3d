@@ -149,6 +149,7 @@
     <ClInclude Include="Legs.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Arc.bmp" />
     <Image Include="Box.bmp" />
     <Image Include="Sky1.bmp" />
   </ItemGroup>
