@@ -5,12 +5,8 @@ void Legs::draw() {
 	float scaling = 0.8;
 	glScalef(scaling, scaling, scaling);
 	//glTranslatef(0, 0.9, 0); // just to move the model up so can see better
-
-	//drawQuads();
-
-	//drawShin();
-
-	drawFoot();
+	drawQuads();
+	drawShin();
 }
 
 void Legs::drawQuads()
@@ -112,21 +108,5 @@ void Legs::drawShin()
 	glPushMatrix();
 	glTranslatef(0, -1.58 , 0.05);
 	Shapes::drawSphere(0.1, 30, 30, GLU_LINE);
-	glPopMatrix();
-}
-
-void Legs::drawFoot()
-{
-	glPushMatrix();
-	Shapes::drawCube(
-		Vector3(),
-		Vector3(),
-		Vector3(),
-		Vector3(),
-		Vector3(),
-		Vector3(),
-		Vector3(),
-		Vector3(),
-		GL_LINE_LOOP);
 	glPopMatrix();
 }
