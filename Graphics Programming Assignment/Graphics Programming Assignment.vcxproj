@@ -148,6 +148,10 @@
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="Legs.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="Box.bmp" />
+    <Image Include="Sky1.bmp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

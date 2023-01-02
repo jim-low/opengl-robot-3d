@@ -24,7 +24,7 @@ Robot* robot = new Robot();
 Gun* gun = new Gun();
 
 // switch mode 1-head, 2-body, 3-hand, 4-leg
-int mode = 4;
+int mode = 0;
 
 // projection
 float objZ = 0.0f, objSpeed = 0.1f;		//	object translate in z-axis
@@ -46,7 +46,6 @@ bool isLightOn = false;				//is light on?
 GLuint texture = 0;  //texture name
 BITMAP BMP;				//butmap structure
 HBITMAP hBMP = NULL;	//bitmap handler
-GLuint textureArray[10];
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -309,32 +308,27 @@ void lighting() {
 
 }
 
-GLuint loadtexture(LPCSTR filename) {
-	GLuint texture = 0;
+GLuint loadTexture(LPCSTR imgName) {
 
-	//step 3
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-
-	HBITMAP hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL),
-		filename, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION |
-		LR_LOADFROMFILE);
-
-	GetObject(hBMP, sizeof(BMP), &BMP); //create object in memory to make handler refer to this object
-
-	//step 4
-	glEnable(GL_TEXTURE_2D);
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-		GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-		GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth,
-		BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
-
+	HBITMAP hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), imgName, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+	GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
 	DeleteObject(hBMP);
-
 	return texture;
+}
+
+void background() {
+	loadTexture("Sky1.bmp");
+	glColor3f(1, 1, 1);
+	Shapes::drawPlane(Vector3(-1.1, 1.1, 0.7), Vector3(1.1, 1.1, 0.7), Vector3(1.1, -1.1, 0.7), Vector3(-1.1, -1.1, 0.7), GL_QUADS);
+	glDisable(GL_TEXTURE_2D);
+	glDeleteTextures(1, &texture);
 }
 
 void display()
@@ -350,6 +344,10 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0.9, 0.9, 0.1, 0);
+	glPushMatrix();
+	glLoadIdentity();
+	background();
+	glPopMatrix();
 	lighting();
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, difM);	//diffuse material
 
