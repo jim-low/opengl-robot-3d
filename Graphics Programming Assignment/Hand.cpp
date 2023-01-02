@@ -421,10 +421,13 @@ void Hand::drawLowerArm(int hand_LR, Vector3 lArmRotAngle, Vector3 palmRotAngle,
 	Shapes::drawCylinder(0.061, 0.101, 0.5, 5, 5, GLU_LINE);
 
 	//design
-	glColor3f(0.5,0.5,0.5);
+	glColor3f(1,1,1);
 	Shapes::drawCylinder(0.07, 0.07, 0.05, 30, 30, GLU_FILL);
 	glColor3f(0, 0, 0);
-	Shapes::drawCylinder(0.071, 0.071, 0.05, 5, 5, GLU_LINE);
+	glPushMatrix();
+	glRotatef(ringRot, 0, 0, 1);
+	Shapes::drawCylinder(0.071, 0.071, 0.05, 10, 5, GLU_LINE);
+	glPopMatrix();
 
 	p1->setVector(0.065, 0.07, 0.05);
 	p2->setVector(0.065, -0.07, 0.05);
@@ -540,6 +543,10 @@ void Hand::drawUpperArm(int hand_LR, Vector3 uArmRotAngle, Vector3 lArmRotAngle,
 
 void Hand::draw()
 {
+	ringRot += 0.5;
+	if (ringRot > 360) {
+		ringRot == 0;
+	}
 
 	glPushMatrix();
 	glScalef(0.5, 0.5, 0.5);

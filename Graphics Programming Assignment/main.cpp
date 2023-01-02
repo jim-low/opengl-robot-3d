@@ -15,13 +15,8 @@
 #pragma comment (lib, "GLU32.lib")
 #define WINDOW_TITLE "BigASS Robot Simulator"
 
-// body part objects
-Body* body = new Body();
-Hand* hand = new Hand();
-Legs* legs = new Legs();
-Head* head = new Head();
+// Robot obj
 Robot* robot = new Robot();
-Gun* gun = new Gun();
 
 // projection
 float objZ = 0.0f, objSpeed = 0.1f;		//	object translate in z-axis
@@ -63,10 +58,10 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 				objZ += objSpeed;
 			}
 		}
-		else if (wParam == 'A') ptx -= ptSpeed;		//-------------------------
-		else if (wParam == 'D') ptx += ptSpeed;		// projecttion translation
-		else if (wParam == 'S') pty -= ptSpeed;		// (W,A,S,D)
-		else if (wParam == 'W') pty += ptSpeed;		//-------------------------
+		//else if (wParam == 'A') ptx -= ptSpeed;		//-------------------------
+		//else if (wParam == 'D') ptx += ptSpeed;		// projecttion translation
+		//else if (wParam == 'S') pty -= ptSpeed;		// (W,A,S,D)
+		//else if (wParam == 'W') pty += ptSpeed;		//-------------------------
 		else if (wParam == 'I') prx -= prSpeed;		//-------------------------
 		else if (wParam == 'K') prx += prSpeed;		// projection rotation
 		else if (wParam == 'J') pry -= prSpeed;		// (I,J,K,L)
@@ -86,12 +81,12 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		else if (wParam == 'S') {
 			robot->robotDirection.y = 180;
 			robot->robotDirection.x = 0;
-			robot->robotMovement.z -= robot->movementSpeed;
+			robot->robotMovement.z += robot->movementSpeed;
 		}
 		else if (wParam == 'W') {
 			robot->robotDirection.y = 0;
 			robot->robotDirection.x = 0;
-			robot->robotMovement.z += robot->movementSpeed;
+			robot->robotMovement.z -= robot->movementSpeed;
 		}
 		else if (wParam == VK_SHIFT) {
 			robot->hand->positiveTransform = !robot->hand->positiveTransform;
@@ -179,6 +174,9 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		}
 		else if (wParam == 0x32) {
 			robot->hand->isSwordOpen_R = !robot->hand->isSwordOpen_R;
+		}
+		else if (wParam == 0x33) {
+			
 		}
 
 		// finger rotate X

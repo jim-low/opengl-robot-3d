@@ -41,5 +41,12 @@ void Robot::drawRobot() {
 	legs->draw();
 	glPopMatrix();
 
+	//gun 
+	glPushMatrix();
+	glScalef(0.575, 0.4, 0.5);
+	glTranslatef(1, 0, 0);
+	gun->draw();
+	glPopMatrix();
+
 	glPopMatrix();
 }
