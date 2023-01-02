@@ -135,9 +135,13 @@ void Shapes::drawCube(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4, Vector3 p5
 
 void Shapes::drawPlane(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4, GLenum glBeginMode) {
 	glBegin(glBeginMode);
+	glTexCoord2f(0.0, 1.0);
 	glVertex3f(p1.x, p1.y, p1.z);
+	glTexCoord2f(1.0, 1.0);
 	glVertex3f(p2.x, p2.y, p2.z);
+	glTexCoord2f(1.0, 0.0);
 	glVertex3f(p3.x, p3.y, p3.z);
+	glTexCoord2f(0.0, 0.0);
 	glVertex3f(p4.x, p4.y, p4.z);
 	glEnd();
 }

@@ -1,6 +1,35 @@
 #include "Body.h"
 #include "Vector3.h"
 
+
+GLuint Body::loadtexture(LPCSTR filename) {
+	GLuint texture = 0;
+
+	//step 3
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+
+	HBITMAP hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL),
+		filename, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION |
+		LR_LOADFROMFILE);
+
+	GetObject(hBMP, sizeof(this->BMP), &BMP); //create object in memory to make handler refer to this object
+
+	//step 4
+	glEnable(GL_TEXTURE_2D);
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+		GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+		GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth,
+		BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+	DeleteObject(hBMP);
+
+	return texture;
+}
+
 void Body::drawBody() {
 	//  Upper
 	glPushMatrix();
@@ -158,12 +187,15 @@ void Body::drawArmor() {
 	glColor3f(0, 0, 0);
 	Shapes::drawCylinder(0.1, 0.1, 0.2, 30, 30, GLU_FILL);
 	glPopMatrix();*/
+	textureArray[1] = loadtexture("Arc.png");
 	glPushMatrix();
 	glTranslatef(0, 0, 0.08);
 	glColor3f(1, 1, 1);
 	Shapes::drawSphere(0.099, 30, 30, GLU_FILL);
 	glPopMatrix();
 	glPopMatrix();
+	glDeleteTextures(1, &textureArray[1]);
+	glDisable(GL_TEXTURE_2D);
 
 
 	glPushMatrix();

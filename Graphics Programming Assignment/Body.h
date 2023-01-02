@@ -14,6 +14,13 @@ class Body
 	// function name;
 public:
 
+	GLuint texture = 0;  //texture name
+	BITMAP BMP;				//butmap structure
+	HBITMAP hBMP = NULL;	//bitmap handler
+	GLuint textureArray[10];
+
+
+	GLuint loadtexture(LPCSTR filename);
 	void drawBody();
 	void connectLeg();
 	void drawFrontBody();

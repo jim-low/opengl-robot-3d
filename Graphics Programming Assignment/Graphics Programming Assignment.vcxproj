@@ -130,6 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Body.cpp" />
+    <ClCompile Include="Gun.cpp" />
     <ClCompile Include="Hand.cpp" />
     <ClCompile Include="Head.cpp" />
     <ClCompile Include="Legs.cpp" />
@@ -138,6 +139,7 @@
     <ClCompile Include="Shapes.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Gun.h" />
     <ClInclude Include="Hand.h" />
     <ClInclude Include="Body.h" />
     <ClInclude Include="Head.h" />
@@ -145,6 +147,10 @@
     <ClInclude Include="Shapes.h" />
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="Legs.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Box.bmp" />
+    <Image Include="Sky1.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
