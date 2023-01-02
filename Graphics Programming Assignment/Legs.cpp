@@ -9,7 +9,6 @@ void Legs::draw() {
 	}
 
 	drawQuads();
-
 	drawShin();
 
 	fireScale.x += fireScaling;
@@ -175,21 +174,5 @@ void Legs::drawFire() {
 	Shapes::drawCylinder(0.121, 0, 0.5, 30, 30, GLU_FILL);
 	glPopMatrix();
 
-	glPopMatrix();
-}
-
-void Legs::drawFoot()
-{
-	glPushMatrix();
-	Shapes::drawCube(
-		Vector3(),
-		Vector3(),
-		Vector3(),
-		Vector3(),
-		Vector3(),
-		Vector3(),
-		Vector3(),
-		Vector3(),
-		GL_LINE_LOOP);
 	glPopMatrix();
 }
