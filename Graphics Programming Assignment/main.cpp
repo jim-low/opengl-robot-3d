@@ -27,6 +27,24 @@ float objZ = 0.0f, objSpeed = 0.1f;		//	object translate in z-axis
 float oNear = -10.0f, oFar = 10.0f;			//	ortho near & far
 float ptx = 0.0f, pty = 0.0f, ptSpeed = 0.1f;	//	translation for projection
 float prx = 0.0f, pry = 0.0f, prSpeed = 5;			//	rotation for projection
+boolean isOrtho = true;
+
+//lighting and material
+float amb[] = { 0.6, 1.0, 0.6 }; //red ambient light source
+float dif[] = { 0.6, 1.0, 0.6 }; //red diffuse light source
+float posA[] = { 0.0, 0.4, 0.0 }; //ambient light from top 
+float posD[] = { 0.0, 0.4, 0.0 }; //diffsue light from right 
+
+float ambM[] = { 0.0, 1.0, 0.0 }; // red ambient material 
+float difM[] = { 0.0, 1.0, 0.0 }; // red diffuse material
+bool isLightOn = false;				//is light on?
+
+GLuint texture = 0;  //texture name
+BITMAP BMP;				//butmap structure
+HBITMAP hBMP = NULL;	//bitmap handler
+GLuint textureArray[10];
+
+
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -65,6 +83,10 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 				
 				break;
 			case 2:
+				if (wParam == 'L')			//L 
+				{
+					isLightOn = !isLightOn;
+				}
 				break;
 			case 3:
 				if (wParam == VK_SHIFT) {
@@ -188,6 +210,28 @@ void projection() {
 	glRotatef(prx, 1, 0, 0);		//rotate in x
 }
 
+void lighting() {
+
+	if (isLightOn) {
+		glEnable(GL_LIGHTING);
+	}
+	else {
+		glDisable(GL_LIGHTING);
+	}
+
+
+	//light 0
+	glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
+	glLightfv(GL_LIGHT0, GL_POSITION, posA);
+	glEnable(GL_LIGHT0);
+
+	//light 1
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, dif);
+	glLightfv(GL_LIGHT1, GL_POSITION, posD);
+	glEnable(GL_LIGHT1);
+
+}
+
 void display()
 {
 	//projection();
@@ -201,6 +245,9 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0.9, 0.9, 0.1, 0);
+	lighting();
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, difM);	//diffuse material
+
 
 	switch (mode) {
 	case 1:
