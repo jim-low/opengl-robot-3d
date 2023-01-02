@@ -8,6 +8,8 @@
 #include "Hand.h"
 #include "Legs.h"
 #include "Head.h"
+#include "Fire.h"
+#include "Gun.h"
 
 #pragma comment (lib, "OpenGL32.lib")
 #pragma comment (lib, "GLU32.lib")
@@ -19,7 +21,14 @@ public:
 	Hand* hand = new Hand();
 	Legs* legs = new Legs();
 	Head* head = new Head();
+	Fire* fire = new Fire();
+	Gun* gun = new Gun();
+
+	Vector3 robotDirection = Vector3();
+	Vector3 robotMovement = Vector3();
+	float movementSpeed = 0.03;
 
 	void draw();
+	void drawRobot();
 };
 

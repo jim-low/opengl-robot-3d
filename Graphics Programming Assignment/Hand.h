@@ -30,11 +30,12 @@ public:
 	float thumbRot = 1.5;
 	float sword_L = 0, sword_R = 0;
 	bool isSwordOpen_L = false, isSwordOpen_R = false;
+	float ringRot = 0;
 	
 	void drawSwordPart(float swordLength);
-	void drawUpperArm(Vector3 uArmRotAngle, Vector3 lArmRotAngle, Vector3 palmRotAngle, float swordLength);
-	void drawLowerArm(Vector3 lArmRotAngle, Vector3 palmRotAngle, float swordLength);
-	void drawPalm(Vector3 palmRotAngle);
+	void drawUpperArm(int hand_LR, Vector3 uArmRotAngle, Vector3 lArmRotAngle, Vector3 palmRotAngle, float swordLength);
+	void drawLowerArm(int hand_LR, Vector3 lArmRotAngle, Vector3 palmRotAngle, float swordLength);
+	void drawPalm(int hand_LR, Vector3 palmRotAngle);
 	void drawThumb();
 	void drawIndexFinger();
 	void drawMiddleFinger();

@@ -15,16 +15,8 @@
 #pragma comment (lib, "GLU32.lib")
 #define WINDOW_TITLE "BigASS Robot Simulator"
 
-// body part objects
-Body* body = new Body();
-Hand* hand = new Hand();
-Legs* legs = new Legs();
-Head* head = new Head();
+// Robot obj
 Robot* robot = new Robot();
-Gun* gun = new Gun();
-
-// switch mode 1-head, 2-body, 3-hand, 4-leg
-int mode = 0;
 
 // projection
 float objZ = 0.0f, objSpeed = 0.1f;		//	object translate in z-axis
@@ -66,183 +58,133 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 				objZ += objSpeed;
 			}
 		}
-		else if (wParam == 'A') ptx -= ptSpeed;		//-------------------------
-		else if (wParam == 'D') ptx += ptSpeed;		// projecttion translation
-		else if (wParam == 'S') pty -= ptSpeed;		// (W,A,S,D)
-		else if (wParam == 'W') pty += ptSpeed;		//-------------------------
+		//else if (wParam == 'A') ptx -= ptSpeed;		//-------------------------
+		//else if (wParam == 'D') ptx += ptSpeed;		// projecttion translation
+		//else if (wParam == 'S') pty -= ptSpeed;		// (W,A,S,D)
+		//else if (wParam == 'W') pty += ptSpeed;		//-------------------------
 		else if (wParam == 'I') prx -= prSpeed;		//-------------------------
 		else if (wParam == 'K') prx += prSpeed;		// projection rotation
 		else if (wParam == 'J') pry -= prSpeed;		// (I,J,K,L)
 		else if (wParam == 'L') pry += prSpeed;		//-------------------------
-		else if (wParam == 0x31) mode = 1;			// head (wing kian)
-		else if (wParam == 0x32) mode = 2;			// body (yu heng)
-		else if (wParam == 0x33) mode = 3;			// hand (zi heng)
-		else if (wParam == 0x34) mode = 4;			// legs (jim)
-		else if (wParam == 0x35) mode = 5;			// complete robot
-		else if (wParam == 0x36) mode = 6;
-		
-		switch (mode) {
-			case 1:
-				
-				break;
-			case 2:
-				if (wParam == 'L')			//L 
-				{
-					isLightOn = !isLightOn;
-				}
-				break;
-			case 3:
-				if (wParam == VK_SHIFT) {
-					hand->positiveTransform = !hand->positiveTransform;
-				}
-				else if (wParam == VK_SPACE) {
-					hand->lArmRotAngle_L = 0;
-					hand->uArmRotAngle_L = 0;
-					hand->palmRotAngle_L = 0;
-					hand->lArmRotAngle_R = 0;
-					hand->uArmRotAngle_R = 0;
-					hand->palmRotAngle_R = 0;
-				}
-				// uppwerArm rotatation
-				else if (wParam == 'Z') {
-					if (hand->uArmRotAngle_L->y < 180 && hand->positiveTransform)
-						hand->uArmRotAngle_L->y += hand->uArmRot;
-					if (hand->uArmRotAngle_L->y > -30 && !hand->positiveTransform)
-						hand->uArmRotAngle_L->y -= hand->uArmRot;
-				}
-				else if (wParam == 'X') {
-					if (hand->uArmRotAngle_R->y < 190 && hand->positiveTransform)
-						hand->uArmRotAngle_R->y += hand->uArmRot;
-					if (hand->uArmRotAngle_R->y > -30 && !hand->positiveTransform)
-						hand->uArmRotAngle_R->y -= hand->uArmRot;
-				}
-				else if (wParam == 'C') {
-					if (hand->lArmRotAngle_L->y < 90 && hand->positiveTransform)
-						hand->lArmRotAngle_L->y += hand->lArmRot;
-					if (hand->lArmRotAngle_L->y > 0 && !hand->positiveTransform)
-						hand->lArmRotAngle_L->y -= hand->lArmRot;
-				}
-				else if (wParam == 'V') {
-					if (hand->lArmRotAngle_R->y < 90 && hand->positiveTransform)
-						hand->lArmRotAngle_R->y += hand->lArmRot;
-					if (hand->lArmRotAngle_R->y > 0 && !hand->positiveTransform)
-						hand->lArmRotAngle_R->y -= hand->lArmRot;
-				}
-				else if (wParam == 'B') {
-					if (hand->lArmRotAngle_L->z < 90 && hand->positiveTransform)
-						hand->lArmRotAngle_L->z += hand->palmRot;
-					if (hand->lArmRotAngle_L->z > 0 && !hand->positiveTransform)
-						hand->lArmRotAngle_L->z -= hand->palmRot;
-				}
-				else if (wParam == 'N') {
-					if (hand->lArmRotAngle_R->z < 90 && hand->positiveTransform)
-						hand->lArmRotAngle_R->z += hand->palmRot;
-					if (hand->lArmRotAngle_R->z > 0 && !hand->positiveTransform)
-						hand->lArmRotAngle_R->z -= hand->palmRot;
-				}
-				else if (wParam == 'Q') {			
-					hand->uArmRotAngle_R->y += hand->uArmRot * hand->walkSwing;
-					hand->uArmRotAngle_L->y -= hand->uArmRot * hand->walkSwing;
-					if (hand->uArmRotAngle_R->y == -45) {
-						hand->walkSwing = 1;
-					}
-					if (hand->uArmRotAngle_R->y == 45) {
-						hand->walkSwing = -1;
-					}			
-				}
-				else if (wParam == 'O') {				
-					hand->isSwordOpen_L = !hand->isSwordOpen_L;
-				}
-				else if (wParam == 'P') {
-					hand->isSwordOpen_R = !hand->isSwordOpen_R;
-				}
 
-				// finger rotate X
-				else if (wParam == 'M') {
-					hand->closeFinger();
-				}
-				break;
-			case 4:
-				break;
-			case 5:
-				if (wParam == VK_SHIFT) {
-					robot->hand->positiveTransform = !robot->hand->positiveTransform;
-				}
-				else if (wParam == VK_SPACE) {
-					robot->hand->lArmRotAngle_L = 0;
-					robot->hand->uArmRotAngle_L = 0;
-					robot->hand->palmRotAngle_L = 0;
-					robot->hand->lArmRotAngle_R = 0;
-					robot->hand->uArmRotAngle_R = 0;
-					robot->hand->palmRotAngle_R = 0;
-				}
-				// uppwerArm rotatation
-				else if (wParam == 'Z') {
-					if (robot->hand->uArmRotAngle_L->y < 180 && robot->hand->positiveTransform)
-						robot->hand->uArmRotAngle_L->y += robot->hand->uArmRot;
-					if (robot->hand->uArmRotAngle_L->y > -30 && !robot->hand->positiveTransform)
-						robot->hand->uArmRotAngle_L->y -= robot->hand->uArmRot;
-				}
-				else if (wParam == 'X') {
-					if (robot->hand->uArmRotAngle_R->y < 190 && robot->hand->positiveTransform)
-						robot->hand->uArmRotAngle_R->y += robot->hand->uArmRot;
-					if (robot->hand->uArmRotAngle_R->y > -30 && !robot->hand->positiveTransform)
-						robot->hand->uArmRotAngle_R->y -= robot->hand->uArmRot;
-				}
-				else if (wParam == 'C') {
-					if (robot->hand->lArmRotAngle_L->y < 90 && robot->hand->positiveTransform)
-						robot->hand->lArmRotAngle_L->y += robot->hand->lArmRot;
-					if (robot->hand->lArmRotAngle_L->y > 0 && !robot->hand->positiveTransform)
-						robot->hand->lArmRotAngle_L->y -= robot->hand->lArmRot;
-				}
-				else if (wParam == 'V') {
-					if (robot->hand->lArmRotAngle_R->y < 90 && robot->hand->positiveTransform)
-						robot->hand->lArmRotAngle_R->y += robot->hand->lArmRot;
-					if (robot->hand->lArmRotAngle_R->y > 0 && !robot->hand->positiveTransform)
-						robot->hand->lArmRotAngle_R->y -= robot->hand->lArmRot;
-				}
-				else if (wParam == 'B') {
-					if (robot->hand->lArmRotAngle_L->z < 90 && robot->hand->positiveTransform)
-						robot->hand->lArmRotAngle_L->z += robot->hand->palmRot;
-					if (robot->hand->lArmRotAngle_L->z > 0 && !robot->hand->positiveTransform)
-						robot->hand->lArmRotAngle_L->z -= robot->hand->palmRot;
-				}
-				else if (wParam == 'N') {
-					if (robot->hand->lArmRotAngle_R->z < 90 && robot->hand->positiveTransform)
-						robot->hand->lArmRotAngle_R->z += robot->hand->palmRot;
-					if (robot->hand->lArmRotAngle_R->z > 0 && !robot->hand->positiveTransform)
-						robot->hand->lArmRotAngle_R->z -= robot->hand->palmRot;
-				}
-				else if (wParam == 'Q') {
-					robot->hand->uArmRotAngle_R->y += robot->hand->uArmRot * robot->hand->walkSwing;
-					robot->hand->uArmRotAngle_L->y -= robot->hand->uArmRot * robot->hand->walkSwing;
-					if (robot->hand->uArmRotAngle_R->y == -45) {
-						robot->hand->walkSwing = 1;
-					}
-					if (robot->hand->uArmRotAngle_R->y == 45) {
-						robot->hand->walkSwing = -1;
-					}
-				}
-				else if (wParam == 'O') {
-					robot->hand->isSwordOpen_L = !robot->hand->isSwordOpen_L;
-				}
-				else if (wParam == 'P') {
-					robot->hand->isSwordOpen_R = !robot->hand->isSwordOpen_R;
-				}
-
-				// finger rotate X
-				else if (wParam == 'M') {
-					robot->hand->closeFinger();
-				}
-				break;
-			case 6:
-				break;
-			default:
-				break;
+		if (wParam == 'A') {
+			robot->robotDirection.y = 90;
+			robot->robotDirection.x = 330;
+			robot->robotMovement.x -= robot->movementSpeed;
 		}
-		break;
-	default:
-		break;
+
+		else if (wParam == 'D') {
+			robot->robotDirection.y = -90;
+			robot->robotDirection.x = -30;
+			robot->robotMovement.x += robot->movementSpeed;
+		}
+		else if (wParam == 'S') {
+			robot->robotDirection.y = 180;
+			robot->robotDirection.x = 0;
+			robot->robotMovement.z += robot->movementSpeed;
+		}
+		else if (wParam == 'W') {
+			robot->robotDirection.y = 0;
+			robot->robotDirection.x = 0;
+			robot->robotMovement.z -= robot->movementSpeed;
+		}
+		else if (wParam == VK_SHIFT) {
+			robot->hand->positiveTransform = !robot->hand->positiveTransform;
+		}
+		else if (wParam == VK_SPACE) {
+			robot->robotDirection = Vector3(0, 0, 0);
+			robot->robotMovement = Vector3(0, 0, 0);
+			robot->hand->positiveTransform = true;
+			robot->hand->walkSwing = 1;
+			robot->hand->lArmRotAngle_L->setVector(0, 0, 0);
+			robot->hand->uArmRotAngle_L->setVector(0, 0, 0);
+			robot->hand->palmRotAngle_L->setVector(0, 0, 0);
+			robot->hand->lArmRotAngle_R->setVector(0, 0, 0);
+			robot->hand->uArmRotAngle_R->setVector(0, 0, 0);
+			robot->hand->palmRotAngle_R->setVector(0, 0, 0);
+			robot->hand->fingerRot_X = 0;
+			robot->hand->thumbRotAngle->setVector(0, 0, 0);
+			robot->hand->sword_L = 0;
+			robot->hand->sword_R = 0;
+			robot->hand->isSwordOpen_L = false;
+			robot->hand->isSwordOpen_R = false;
+		}
+		// uppwerArm rotatation
+		else if (wParam == 'Z') {
+			if (robot->hand->uArmRotAngle_L->y < 180 && robot->hand->positiveTransform)
+				robot->hand->uArmRotAngle_L->y += robot->hand->uArmRot;
+			if (robot->hand->uArmRotAngle_L->y > -30 && !robot->hand->positiveTransform)
+				robot->hand->uArmRotAngle_L->y -= robot->hand->uArmRot;
+		}
+		else if (wParam == 'X') {
+			if (robot->hand->uArmRotAngle_R->y < 190 && robot->hand->positiveTransform)
+				robot->hand->uArmRotAngle_R->y += robot->hand->uArmRot;
+			if (robot->hand->uArmRotAngle_R->y > -30 && !robot->hand->positiveTransform)
+				robot->hand->uArmRotAngle_R->y -= robot->hand->uArmRot;
+		}
+		else if (wParam == 'C') {
+			if (robot->hand->lArmRotAngle_L->y < 90 && robot->hand->positiveTransform)
+				robot->hand->lArmRotAngle_L->y += robot->hand->lArmRot;
+			if (robot->hand->lArmRotAngle_L->y > 0 && !robot->hand->positiveTransform)
+				robot->hand->lArmRotAngle_L->y -= robot->hand->lArmRot;
+		}
+		else if (wParam == 'V') {
+			if (robot->hand->lArmRotAngle_R->y < 90 && robot->hand->positiveTransform)
+				robot->hand->lArmRotAngle_R->y += robot->hand->lArmRot;
+			if (robot->hand->lArmRotAngle_R->y > 0 && !robot->hand->positiveTransform)
+				robot->hand->lArmRotAngle_R->y -= robot->hand->lArmRot;
+		}
+		else if (wParam == 'B') {
+			if (robot->hand->lArmRotAngle_L->z < 90 && robot->hand->positiveTransform)
+				robot->hand->lArmRotAngle_L->z += robot->hand->palmRot;
+			if (robot->hand->lArmRotAngle_L->z > -90 && !robot->hand->positiveTransform)
+				robot->hand->lArmRotAngle_L->z -= robot->hand->palmRot;
+		}
+		else if (wParam == 'N') {
+			if (robot->hand->lArmRotAngle_R->z < 90 && robot->hand->positiveTransform)
+				robot->hand->lArmRotAngle_R->z += robot->hand->palmRot;
+			if (robot->hand->lArmRotAngle_R->z > -90 && !robot->hand->positiveTransform)
+				robot->hand->lArmRotAngle_R->z -= robot->hand->palmRot;
+		}
+		else if (wParam == 'E') {
+			robot->hand->uArmRotAngle_L->y = 0;
+			robot->hand->uArmRotAngle_R->y = 0;
+			robot->hand->lArmRotAngle_L->z = 0;
+			robot->hand->lArmRotAngle_R->z = 0;
+			robot->hand->uArmRotAngle_R->x += robot->hand->uArmRot * robot->hand->walkSwing;
+			robot->hand->uArmRotAngle_L->x -= robot->hand->uArmRot * robot->hand->walkSwing;
+			if (robot->hand->uArmRotAngle_R->x == 0) {
+				robot->hand->walkSwing = 1;
+			}
+			if (robot->hand->uArmRotAngle_R->x == 60) {
+				robot->hand->walkSwing = -1;
+			}
+			robot->robotMovement.y += robot->movementSpeed;
+		}
+		else if (wParam == 'Q') {
+			robot->hand->uArmRotAngle_L->y = 180;
+			robot->hand->uArmRotAngle_R->y = 180;
+			robot->hand->lArmRotAngle_L->z = -90;
+			robot->hand->lArmRotAngle_R->z = -90;
+			robot->robotMovement.y -= robot->movementSpeed;
+			robot->legs->fireScale = Vector3();
+		}
+		else if (wParam == 0x31) {
+			robot->hand->isSwordOpen_L = !robot->hand->isSwordOpen_L;
+		}
+		else if (wParam == 0x32) {
+			robot->hand->isSwordOpen_R = !robot->hand->isSwordOpen_R;
+		}
+		else if (wParam == 0x33) {
+			
+		}
+
+		// finger rotate X
+		else if (wParam == 'M') {
+			robot->hand->closeFinger();
+		}
+		
+		
 	}
 
 	return DefWindowProc(hWnd, msg, wParam, lParam);
@@ -352,28 +294,9 @@ void display()
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, difM);	//diffuse material
 
 
-	switch (mode) {
-	case 1:
-		head->draw();
-		break;
-	case 2:
-		body->draw();
-		break;
-	case 3:		
-		hand->draw();		
-		break;
-	case 4:
-		legs->draw();
-		break;
-	case 5:
+
 		robot->draw();
-		break;
-	case 6:
-		gun->draw();
-		break;
-	default:
-		break;
-	}
+
 	
 }
 
