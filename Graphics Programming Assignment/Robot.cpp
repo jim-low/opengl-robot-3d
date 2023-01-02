@@ -17,6 +17,7 @@ void Robot::draw() {
 
 	glPushMatrix();
 	glScalef(1.5, 1, 1);
+	glTranslatef(0, 0, 0);
 	legs->draw();
 	glPopMatrix();
 }
