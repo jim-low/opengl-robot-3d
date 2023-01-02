@@ -276,19 +276,19 @@ void projection() {
 	glMatrixMode(GL_PROJECTION);	//refer to the projection matrix
 	glLoadIdentity();				//reset the projections matrix
 
-	glTranslatef(ptx, pty, 0);	//translate in x and y for projection
-	glRotatef(pry, 0, 1, 0);		//rotate in y
-	glRotatef(prx, 1, 0, 0);		//rotate in x
-
 	if (isOrtho)
 	{
 		glOrtho(1.0, 1.0, 1.0, 1.0, oNear, oFar);
 	}
 	else
 	{
-		gluPerspective(10, 1, -10.0, 10.0);
+		gluPerspective(20, 1, pNear, pFar);
 		glFrustum(-10.0, 10.0, -10.0, 10.0, pNear, pFar);
 	}
+
+	glTranslatef(ptx, pty, 0);	//translate in x and y for projection
+	glRotatef(pry, 0, 1, 0);		//rotate in y
+	glRotatef(prx, 1, 0, 0);		//rotate in x
 }
 
 void lighting() {
@@ -331,7 +331,7 @@ GLuint loadTexture(LPCSTR imgName) {
 void background() {
 	loadTexture("Sky1.bmp");
 	glColor3f(1, 1, 1);
-	Shapes::drawPlane(Vector3(-1.1, 1.1, 0.7), Vector3(1.1, 1.1, 0.7), Vector3(1.1, -1.1, 0.7), Vector3(-1.1, -1.1, 0.7), GL_QUADS);
+	Shapes::drawPlane(Vector3(-1.1, 1.1, 0.4), Vector3(1.1, 1.1, 0.4), Vector3(1.1, -1.1, 0.4), Vector3(-1.1, -1.1, 0.4), GL_QUADS);
 	glDisable(GL_TEXTURE_2D);
 	glDeleteTextures(1, &texture);
 }
@@ -347,10 +347,7 @@ void display()
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0.9, 0.9, 0.1, 0);
 
-	glPushMatrix();
-	glLoadIdentity();
 	background();
-	glPopMatrix();
 
 	lighting();
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, difM);	//diffuse material
@@ -385,8 +382,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 
 	MSG msg;
 	ZeroMemory(&msg, sizeof(msg));
-
-	//projection();
 
 	while (true)
 	{
