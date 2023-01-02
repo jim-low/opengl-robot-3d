@@ -24,10 +24,9 @@ public:
 	float sword_L = 0, sword_R = 0;
 	bool isSwordOpen_L = false, isSwordOpen_R = false;
 	
-	float swordControl(bool isOpen, float swordLength);
-	void drawSwordPart(bool isOpen, float swordLength);
-	void drawUpperArm(float uArmRotAngle, float lArmRotAngle, float palmRotAngle, bool isOpen, float swordLength);
-	void drawLowerArm(float lArmRotAngle, float palmRotAngle, bool isOpen, float swordLength);
+	void drawSwordPart(float swordLength);
+	void drawUpperArm(float uArmRotAngle, float lArmRotAngle, float palmRotAngle, float swordLength);
+	void drawLowerArm(float lArmRotAngle, float palmRotAngle, float swordLength);
 	void drawPalm(float palmRotAngle);
 	void drawThumb();
 	void drawIndexFinger();

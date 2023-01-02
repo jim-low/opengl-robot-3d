@@ -8,6 +8,7 @@
 #include "Hand.h"
 #include "Legs.h"
 #include "Head.h"
+#include "Robot.h"
 
 #pragma comment (lib, "OpenGL32.lib")
 #pragma comment (lib, "GLU32.lib")
@@ -18,6 +19,7 @@ Body* body = new Body();
 Hand* hand = new Hand();
 Legs* legs = new Legs();
 Head* head = new Head();
+Robot* robot = new Robot();
 
 // switch mode 1-head, 2-body, 3-hand, 4-leg
 int mode = 4;
@@ -59,6 +61,7 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		else if (wParam == 0x32) mode = 2;			// body (yu heng)
 		else if (wParam == 0x33) mode = 3;			// hand (zi heng)
 		else if (wParam == 0x34) mode = 4;			// legs (jim)
+		else if (wParam == 0x35) mode = 5;			// complete robot
 		
 		switch (mode) {
 			case 1:
@@ -139,6 +142,77 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 				break;
 			case 4:
 				break;
+			case 5:
+				if (wParam == VK_SHIFT) {
+					robot->hand->positiveTransform = !robot->hand->positiveTransform;
+				}
+				else if (wParam == VK_SPACE) {
+					robot->hand->lArmRotAngle_L = 0;
+					robot->hand->uArmRotAngle_L = 0;
+					robot->hand->palmRotAngle_L = 0;
+					robot->hand->lArmRotAngle_R = 0;
+					robot->hand->uArmRotAngle_R = 0;
+					robot->hand->palmRotAngle_R = 0;
+				}
+				// uppwerArm rotatation
+				else if (wParam == 'Z') {
+					if (robot->hand->uArmRotAngle_L < 180 && robot->hand->positiveTransform)
+						robot->hand->uArmRotAngle_L += robot->hand->uArmRot;
+					if (robot->hand->uArmRotAngle_L > -30 && !robot->hand->positiveTransform)
+						robot->hand->uArmRotAngle_L -= robot->hand->uArmRot;
+				}
+				else if (wParam == 'X') {
+					if (robot->hand->uArmRotAngle_R < 190 && robot->hand->positiveTransform)
+						robot->hand->uArmRotAngle_R += robot->hand->uArmRot;
+					if (robot->hand->uArmRotAngle_R > -30 && !robot->hand->positiveTransform)
+						robot->hand->uArmRotAngle_R -= robot->hand->uArmRot;
+				}
+				else if (wParam == 'C') {
+					if (robot->hand->lArmRotAngle_L < 90 && robot->hand->positiveTransform)
+						robot->hand->lArmRotAngle_L += robot->hand->lArmRot;
+					if (robot->hand->lArmRotAngle_L > 0 && !robot->hand->positiveTransform)
+						robot->hand->lArmRotAngle_L -= robot->hand->lArmRot;
+				}
+				else if (wParam == 'V') {
+					if (robot->hand->lArmRotAngle_R < 90 && robot->hand->positiveTransform)
+						robot->hand->lArmRotAngle_R += robot->hand->lArmRot;
+					if (robot->hand->lArmRotAngle_R > 0 && !robot->hand->positiveTransform)
+						robot->hand->lArmRotAngle_R -= robot->hand->lArmRot;
+				}
+				else if (wParam == 'B') {
+					if (robot->hand->palmRotAngle_L < 90 && robot->hand->positiveTransform)
+						robot->hand->palmRotAngle_L += robot->hand->palmRot;
+					if (robot->hand->palmRotAngle_L > 0 && !robot->hand->positiveTransform)
+						robot->hand->palmRotAngle_L -= robot->hand->palmRot;
+				}
+				else if (wParam == 'N') {
+					if (robot->hand->palmRotAngle_R < 90 && robot->hand->positiveTransform)
+						robot->hand->palmRotAngle_R += robot->hand->palmRot;
+					if (robot->hand->palmRotAngle_R > 0 && !robot->hand->positiveTransform)
+						robot->hand->palmRotAngle_R -= robot->hand->palmRot;
+				}
+				else if (wParam == 'Q') {
+					robot->hand->uArmRotAngle_R += robot->hand->uArmRot * robot->hand->walkSwing;
+					robot->hand->uArmRotAngle_L -= robot->hand->uArmRot * robot->hand->walkSwing;
+					if (robot->hand->uArmRotAngle_R == -45) {
+						robot->hand->walkSwing = 1;
+					}
+					if (robot->hand->uArmRotAngle_R == 45) {
+						robot->hand->walkSwing = -1;
+					}
+				}
+				else if (wParam == 'O') {
+					robot->hand->isSwordOpen_L = !robot->hand->isSwordOpen_L;
+				}
+				else if (wParam == 'P') {
+					robot->hand->isSwordOpen_R = !robot->hand->isSwordOpen_R;
+				}
+
+				// finger rotate X
+				else if (wParam == 'M') {
+					robot->hand->closeFinger();
+				}
+				break;
 			default:
 				break;
 		}
@@ -214,6 +288,9 @@ void display()
 		break;
 	case 4:
 		legs->draw();
+		break;
+	case 5:
+		robot->draw();
 		break;
 	default:
 		break;

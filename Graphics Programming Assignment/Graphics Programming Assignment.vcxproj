@@ -134,12 +134,14 @@
     <ClCompile Include="Head.cpp" />
     <ClCompile Include="Legs.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Robot.cpp" />
     <ClCompile Include="Shapes.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Hand.h" />
     <ClInclude Include="Body.h" />
     <ClInclude Include="Head.h" />
+    <ClInclude Include="Robot.h" />
     <ClInclude Include="Shapes.h" />
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="Legs.h" />
