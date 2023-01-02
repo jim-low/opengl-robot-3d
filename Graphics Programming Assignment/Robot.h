@@ -20,6 +20,11 @@ public:
 	Legs* legs = new Legs();
 	Head* head = new Head();
 
+	Vector3 robotDirection = Vector3();
+	Vector3 robotMovement = Vector3();
+	float movementSpeed = 0.03;
+
 	void draw();
+	void drawRobot();
 };
 

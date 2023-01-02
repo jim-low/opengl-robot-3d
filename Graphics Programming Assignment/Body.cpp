@@ -4,8 +4,11 @@
 void Body::drawBody() {
 	//  Upper
 	glPushMatrix();
-	glColor3f(1, 1, 1);
+	glColor3f(0, 0, 0);
 	Shapes::drawCuboid(Vector3(-0.27, 0.2, 0), 0.54,0.3, 0.2, GL_QUADS);
+	glColor3f(1, 1, 1);
+	glLineWidth(2);
+	Shapes::drawCuboid(Vector3(-0.27, 0.2, 0), 0.54, 0.3, 0.2, GL_LINE_LOOP);
 	glPopMatrix();
 
 	glPushMatrix();
@@ -140,13 +143,14 @@ void Body::drawArmor() {
 	glTranslatef(0.0, 0.17, -0.05);
 	glColor3f(0, 0, 0);
 	Shapes::drawCylinder(0.1, 0.1, 0.2, 30, 30, GLU_FILL);
+	Shapes::drawCylinder(0.1, 0.09, 0.2, 30, 30, GLU_FILL);
+	Shapes::drawCylinder(0.1, 0.08, 0.2, 30, 30, GLU_FILL);
+	Shapes::drawCylinder(0.1, 0.07, 0.2, 30, 30, GLU_FILL);
+	Shapes::drawCylinder(0.1, 0.06, 0.2, 30, 30, GLU_FILL);
+	glColor3f(0.5, 0.5, 0.5);
+	Shapes::drawCylinder(0.1, 0.11, 0.2, 25, 2, GLU_LINE);
 	glPushMatrix();
 	/*glRotatef(2, 0, 1, 0);*/
-	glColor3f(0, 0, 0);
-
-	for (int i = 0; i < 100; i++) {
-		Shapes::drawCylinder(0.1, 0.09, 0.2, 30, 30, GLU_FILL);
-	}
 	
 	glPopMatrix();
 	/*glPushMatrix();
@@ -155,7 +159,7 @@ void Body::drawArmor() {
 	Shapes::drawCylinder(0.1, 0.1, 0.2, 30, 30, GLU_FILL);
 	glPopMatrix();*/
 	glPushMatrix();
-	glTranslatef(0, 0, 0.1);
+	glTranslatef(0, 0, 0.08);
 	glColor3f(1, 1, 1);
 	Shapes::drawSphere(0.099, 30, 30, GLU_FILL);
 	glPopMatrix();
@@ -163,9 +167,11 @@ void Body::drawArmor() {
 
 
 	glPushMatrix();
-	glTranslatef(0, 0.17, 0.2);
+	glTranslatef(0, 0.17, 0.155);
 	glColor3f(0, 0, 0);
 	Shapes::drawSphere(0.1, 30, 30, GLU_FILL);
+	glColor3f(0.5, 0.5, 0.5);
+	Shapes::drawSphere(0.11, 20, 10, GLU_LINE);
 	glPopMatrix();
 	glPopMatrix();
 }

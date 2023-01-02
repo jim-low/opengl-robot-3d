@@ -12,10 +12,14 @@
 class Legs
 {
 public:
+	float ringRot = 0;
+	Vector3 fireScale = Vector3(0.5,0.5,0.5);
+	float fireScaling = 0.002;
+
 	void draw();
-	void drawBelt();
 	void drawQuads();
 	void drawShin();
 	void drawFoot();
+	void drawFire();
 };
 

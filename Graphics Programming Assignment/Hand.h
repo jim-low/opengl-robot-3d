@@ -32,9 +32,9 @@ public:
 	bool isSwordOpen_L = false, isSwordOpen_R = false;
 	
 	void drawSwordPart(float swordLength);
-	void drawUpperArm(Vector3 uArmRotAngle, Vector3 lArmRotAngle, Vector3 palmRotAngle, float swordLength);
-	void drawLowerArm(Vector3 lArmRotAngle, Vector3 palmRotAngle, float swordLength);
-	void drawPalm(Vector3 palmRotAngle);
+	void drawUpperArm(int hand_LR, Vector3 uArmRotAngle, Vector3 lArmRotAngle, Vector3 palmRotAngle, float swordLength);
+	void drawLowerArm(int hand_LR, Vector3 lArmRotAngle, Vector3 palmRotAngle, float swordLength);
+	void drawPalm(int hand_LR, Vector3 palmRotAngle);
 	void drawThumb();
 	void drawIndexFinger();
 	void drawMiddleFinger();
