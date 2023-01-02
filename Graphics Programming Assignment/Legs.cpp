@@ -6,11 +6,11 @@ void Legs::draw() {
 	glScalef(scaling, scaling, scaling);
 	//glTranslatef(0, 0.9, 0); // just to move the model up so can see better
 
-	//drawQuads();
+	drawQuads();
 
-	//drawShin();
+	drawShin();
 
-	drawFoot();
+	//drawFoot();
 }
 
 void Legs::drawQuads()

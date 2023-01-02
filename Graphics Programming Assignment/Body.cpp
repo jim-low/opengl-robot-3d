@@ -5,7 +5,7 @@ void Body::drawBody() {
 	//  Upper
 	glPushMatrix();
 	glColor3f(1, 1, 1);
-	Shapes::drawCuboid(Vector3(-0.25, 0.2, 0), 0.5, 0.2, 0.2, GL_QUADS);
+	Shapes::drawCuboid(Vector3(-0.27, 0.2, 0), 0.54, 0.2, 0.2, GL_QUADS);
 	glPopMatrix();
 
 	glPushMatrix();
