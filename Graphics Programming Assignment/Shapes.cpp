@@ -141,3 +141,4 @@ void Shapes::drawPlane(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4, GLenum gl
 	glVertex3f(p4.x, p4.y, p4.z);
 	glEnd();
 }
+

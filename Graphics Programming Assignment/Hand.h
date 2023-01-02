@@ -15,20 +15,26 @@ public:
 
 	bool positiveTransform = true;
 	int walkSwing = 1;
-	float uArmRotAngle_L = 0, uArmRotAngle_R = 0, uArmRot = 5;	// upper arm rotaion
-	float lArmRotAngle_L = 0, lArmRotAngle_R = 0, lArmRot = 5;	// lower arm rotaion
-	float palmRotAngle_L = 0, palmRotAngle_R = 0, palmRot = 5;	// palm rotaion
+	Vector3* uArmRotAngle_L = new Vector3();
+	Vector3* uArmRotAngle_R = new Vector3();
+	float uArmRot = 5;	// upper arm rotaion
+	Vector3* lArmRotAngle_L = new Vector3();
+	Vector3* lArmRotAngle_R = new Vector3();
+	float lArmRot = 5;	// lower arm rotaion
+	Vector3* palmRotAngle_L = new Vector3();
+	Vector3* palmRotAngle_R = new Vector3();
+	float palmRot = 5;	// palm rotaion
 	float fingerRot_X = 0, fingerRot = 1;
 	float fingerZpos = -0.05;
-	float thumbRot_X = 0, thumbRot_Y = 0, thumbRot_Z = 0, thumbRot = 1.5;
+	Vector3* thumbRotAngle = new Vector3();
+	float thumbRot = 1.5;
 	float sword_L = 0, sword_R = 0;
 	bool isSwordOpen_L = false, isSwordOpen_R = false;
 	
-	float swordControl(bool isOpen, float swordLength);
-	void drawSwordPart(bool isOpen, float swordLength);
-	void drawUpperArm(float uArmRotAngle, float lArmRotAngle, float palmRotAngle, bool isOpen, float swordLength);
-	void drawLowerArm(float lArmRotAngle, float palmRotAngle, bool isOpen, float swordLength);
-	void drawPalm(float palmRotAngle);
+	void drawSwordPart(float swordLength);
+	void drawUpperArm(Vector3 uArmRotAngle, Vector3 lArmRotAngle, Vector3 palmRotAngle, float swordLength);
+	void drawLowerArm(Vector3 lArmRotAngle, Vector3 palmRotAngle, float swordLength);
+	void drawPalm(Vector3 palmRotAngle);
 	void drawThumb();
 	void drawIndexFinger();
 	void drawMiddleFinger();

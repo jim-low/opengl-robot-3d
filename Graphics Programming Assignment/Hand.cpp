@@ -46,48 +46,35 @@ void Hand::closeFinger() {
 		}
 	}
 
-	if (thumbRot_X < 90 && positiveTransform)
+	if (thumbRotAngle->x < 90 && positiveTransform)
 	{
-		thumbRot_X += thumbRot;
+		thumbRotAngle->x += thumbRot;
 	}
-	if (thumbRot_X > 0 && !positiveTransform)
+	if (thumbRotAngle->x > 0 && !positiveTransform)
 	{
-		thumbRot_X -= thumbRot;
-	}
-
-	if (thumbRot_Y < 30 && positiveTransform && thumbRot_X > 60)
-	{
-		thumbRot_Y += thumbRot;
-	}
-	if (thumbRot_Y > 0 && !positiveTransform)
-	{
-		thumbRot_Y -= thumbRot;
+		thumbRotAngle->x -= thumbRot;
 	}
 
-	if (thumbRot_Z < 45 && positiveTransform && thumbRot_X > 45)
+	if (thumbRotAngle->y < 30 && positiveTransform && thumbRotAngle->y > 60)
 	{
-		thumbRot_Z += thumbRot;
+		thumbRotAngle->y += thumbRot;
 	}
-	if (thumbRot_Z > 0 && !positiveTransform)
+	if (thumbRotAngle->y > 0 && !positiveTransform)
 	{
-		thumbRot_Z -= thumbRot;
+		thumbRotAngle->y -= thumbRot;
+	}
+
+	if (thumbRotAngle->z < 45 && positiveTransform && thumbRotAngle->z > 45)
+	{
+		thumbRotAngle->z += thumbRot;
+	}
+	if (thumbRotAngle->z > 0 && !positiveTransform)
+	{
+		thumbRotAngle->z -= thumbRot;
 	}
 }
 
-float Hand::swordControl(bool isOpen, float swordLength) {
-	if (isOpen) {
-		swordLength -= 1;
-
-	}
-
-	if (!isOpen) {
-		swordLength = 0;
-	}
-
-	return swordLength;
-}
-
-void Hand::drawSwordPart(bool isOpen, float swordLength) {
+void Hand::drawSwordPart(float swordLength) {
 	
 	glPushMatrix();
 	
@@ -102,7 +89,6 @@ void Hand::drawSwordPart(bool isOpen, float swordLength) {
 	// sword
 	p1->setVector(-0.028, -0.098, 0.1);
 	glColor3f(1, 1, 1);
-	swordLength = swordControl(isOpen, swordLength);
 	Shapes::drawCuboid(*p1, 0.056, 0.036, swordLength, GL_QUADS);
 
 	glPopMatrix();
@@ -294,8 +280,8 @@ void Hand::drawThumb() {
 	// joint 1
 	glColor3f(0.5, 0.5, 0.5);
 	glTranslatef(-0.101, -0.0501, -0.05); 
-	glRotatef(thumbRot_X, 1, 0, 0);
-	glRotatef(thumbRot_Z * -1, 0, 0, 1);
+	glRotatef(thumbRotAngle->x, 1, 0, 0);
+	glRotatef(thumbRotAngle->z * -1, 0, 0, 1);
 	//fill
 	p1->setVector(0, 0, 0);
 	Shapes::drawCuboid(*p1, 0.03, 0.075, -0.12, GL_QUADS);
@@ -308,7 +294,7 @@ void Hand::drawThumb() {
 	// joint 2
 	glColor3f(0.5, 0.5, 0.5);
 	glTranslatef(0, 0, -0.12);
-	glRotatef(thumbRot_Y * -1, 0, 1, 0);
+	glRotatef(thumbRotAngle->y * -1, 0, 1, 0);
 	//fill
 	p1->setVector(0, 0, 0);
 	Shapes::drawCuboid(*p1, 0.03, 0.075, -0.07, GL_QUADS);
@@ -321,10 +307,15 @@ void Hand::drawThumb() {
 	glPopMatrix();
 }
 
-void Hand::drawPalm(float palmRotAngle) {
+void Hand::drawPalm(Vector3 palmRotAngle) {
 	glColor3f(0, 0, 0);
+
 	glPushMatrix();
-	glRotatef(palmRotAngle,0,0,1);
+
+	glRotatef(palmRotAngle.x, 1, 0, 0);
+	glRotatef(palmRotAngle.y, 0, 1, 0);
+	glRotatef(palmRotAngle.z, 0, 0, 1);
+
 	glTranslatef(0,0,0.015);
 	Shapes::drawSphere(0.06, 30, 30, GLU_LINE);
 
@@ -412,14 +403,16 @@ void Hand::drawPalm(float palmRotAngle) {
 	glPopMatrix();
 }
 
-void Hand::drawLowerArm(float lArmRotAngle, float palmRotAngle, bool isOpen, float swordLength) {
+void Hand::drawLowerArm(Vector3 lArmRotAngle, Vector3 palmRotAngle, float swordLength) {
 	glColor3f(0, 0, 0);
 	Shapes::drawSphere(0.1, 30, 30, GLU_FILL); // joint
 
 	//Lower arm
 	glPushMatrix();
 
-	glRotatef(lArmRotAngle, 0, 1, 0);		//	rotate lower arm
+	glRotatef(lArmRotAngle.x, 1, 0, 0);		//	rotate lower arm x
+	glRotatef(lArmRotAngle.y, 0, 1, 0);		//	rotate lower arm y
+	glRotatef(lArmRotAngle.z, 0, 0, 1);		//	rotate lower arm z
 	
 	glTranslatef(0, 0, -0.5);			//	translate according cylinder arm height
 	glColor3f(0.5, 0.5, 0.5);
@@ -453,21 +446,21 @@ void Hand::drawLowerArm(float lArmRotAngle, float palmRotAngle, bool isOpen, flo
 	Shapes::drawPlane(*p1, *p2, *p3, *p4, GL_QUADS);
 	glPopMatrix();
 	
-	drawSwordPart(isOpen, swordLength);
+	drawSwordPart(swordLength);
 	drawPalm(palmRotAngle);	//draw palm
 
 	glPopMatrix();
 }
 
-void Hand::drawUpperArm(float uArmRotAngle, float lArmRotAngle, float palmRotAngle, bool isOpen, float swordLength) {
-
+void Hand::drawUpperArm(Vector3 uArmRotAngle, Vector3 lArmRotAngle, Vector3 palmRotAngle, float swordLength) {
+	glColor3f(0, 0, 0);
 	Shapes::drawSphere(0.1, 30, 30, GLU_LINE); // joint
 	
 	//Upper arm
 	glPushMatrix();
 
 	//rotate
-	glRotatef(uArmRotAngle, 0, 1, 0);		//	rotate upper arm
+	glRotatef(uArmRotAngle.y, 0, 1, 0);		//	rotate upper arm
 
 	//design
 	glColor3f(0, 0, 0);
@@ -480,7 +473,10 @@ void Hand::drawUpperArm(float uArmRotAngle, float lArmRotAngle, float palmRotAng
 	p7->setVector(-0.1, -0.1, -0.15);
 	p8->setVector(-0.1, 0.1, -0.15);
 	Shapes::drawCube(*p1, *p2, *p3, *p4, *p5, *p6, *p7, *p8, GL_QUADS);
+	glColor3f(1, 1, 1);
+	Shapes::drawCube(*p1, *p2, *p3, *p4, *p5, *p6, *p7, *p8, GL_LINE_LOOP);
 
+	glColor3f(0, 0, 0);
 	p1->setVector(0.1, 0.12, -0.1);
 	p2->setVector(0.1, -0.15, -0.1);
 	p3->setVector(-0.12, -0.15, -0.1);
@@ -490,7 +486,10 @@ void Hand::drawUpperArm(float uArmRotAngle, float lArmRotAngle, float palmRotAng
 	p7->setVector(-0.12, -0.15, 0.08);
 	p8->setVector(-0.12, 0.12, 0.08);
 	Shapes::drawCube(*p1, *p2, *p3, *p4, *p5, *p6, *p7, *p8, GL_QUADS);
+	glColor3f(1, 1, 1);
+	Shapes::drawCube(*p1, *p2, *p3, *p4, *p5, *p6, *p7, *p8, GL_LINE_LOOP);
 
+	glColor3f(0, 0, 0);
 	p1->setVector(0.1, 0.12, 0.08);
 	p2->setVector(0.1, -0.15, 0.08);
 	p3->setVector(-0.12, -0.15, 0.08);
@@ -500,6 +499,8 @@ void Hand::drawUpperArm(float uArmRotAngle, float lArmRotAngle, float palmRotAng
 	p7->setVector(-0.1, -0.1, 0.12);
 	p8->setVector(-0.1, 0.1, 0.12);
 	Shapes::drawCube(*p1, *p2, *p3, *p4, *p5, *p6, *p7, *p8, GL_QUADS);
+	glColor3f(1, 1, 1);
+	Shapes::drawCube(*p1, *p2, *p3, *p4, *p5, *p6, *p7, *p8, GL_LINE_LOOP);
 
 	glTranslatef(0, 0, -0.4);			//	translate according cylinder arm height
 	
@@ -508,7 +509,7 @@ void Hand::drawUpperArm(float uArmRotAngle, float lArmRotAngle, float palmRotAng
 	glColor3f(0, 0, 0);
 	Shapes::drawCylinder(0.101, 0.101, 0.4, 6, 6, GLU_LINE);
 
-	drawLowerArm(lArmRotAngle, palmRotAngle, isOpen, swordLength);	// draw lower arm
+	drawLowerArm(lArmRotAngle, palmRotAngle, swordLength);	// draw lower arm
 	glPopMatrix();
 	
 }
@@ -531,10 +532,27 @@ void Hand::draw()
 	glRotatef(-90, 1, 0, 0);
 	glRotatef(-90, 0, 0, 1);
 	
-	drawUpperArm(uArmRotAngle_L, lArmRotAngle_L, palmRotAngle_L, isSwordOpen_L, sword_L);
+	if (isSwordOpen_L) {
+		if(sword_L > -1)
+			sword_L -= 0.001;
+	}
+	else {
+		if (sword_L < 0)
+			sword_L += 0.001;
+	}
+	drawUpperArm(*uArmRotAngle_L, *lArmRotAngle_L, *palmRotAngle_L, sword_L);
 
 	glScalef(1, -1, 1);
 	glTranslatef(0, -1, 0);
-	drawUpperArm(uArmRotAngle_R, lArmRotAngle_R, palmRotAngle_R, isSwordOpen_R, sword_R);
+
+	if (isSwordOpen_R) {
+		if (sword_R > -1)
+			sword_R -= 0.001;
+	}
+	else {
+		if (sword_R < 0)
+			sword_R += 0.001;
+	}
+	drawUpperArm(*uArmRotAngle_R, *lArmRotAngle_R, *palmRotAngle_R, sword_R);
 	glPopMatrix();
 }
