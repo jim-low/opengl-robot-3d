@@ -26,6 +26,20 @@ void Shapes::drawSphere(GLdouble radius, GLint slices, GLint stacks, GLenum draw
 
 }
 
+void Shapes::drawSphereWithTexture(GLdouble radius, GLint slices, GLint stacks, GLenum drawStyle) {
+
+
+	GLUquadricObj* gluObj = NULL;//create quadric obj pointer
+	gluObj = gluNewQuadric();
+	gluQuadricDrawStyle(gluObj, drawStyle);
+	gluQuadricTexture(gluObj, true);
+
+	gluSphere(gluObj, radius, slices, stacks);
+
+	gluDeleteQuadric(gluObj);
+
+}
+
 void Shapes::drawCuboid(Vector3 startPoint, float width, float height, float length, GLenum glBeginMode) {
 	// front face
 	glBegin(glBeginMode);

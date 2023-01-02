@@ -116,6 +116,7 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			robot->hand->sword_R = 0;
 			robot->hand->isSwordOpen_L = false;
 			robot->hand->isSwordOpen_R = false;
+			robot->hand->isHoldingGun = false;
 		}
 		// uppwerArm rotatation
 		else if (wParam == 'Z') {
@@ -184,12 +185,56 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			robot->hand->isSwordOpen_R = !robot->hand->isSwordOpen_R;
 		}
 		else if (wParam == 0x33) {
-			
+			robot->hand->isHoldingGun = !robot->hand->isHoldingGun;
+			if (robot->hand->isHoldingGun)
+				robot->hand->closeFinger();
+			else 
+				robot->hand->openFinger();
 		}
 
 		// finger rotate X
-		else if (wParam == 'M') {
-			robot->hand->closeFinger();
+		else if (wParam == 'M' && !robot->hand->isHoldingGun) {
+			if (robot->hand->fingerRot_X < 50 && robot->hand->positiveTransform) {
+				robot->hand->fingerRot_X += robot->hand->fingerRot;
+				if (robot->hand->fingerZpos > -0.09) {
+					robot->hand->fingerZpos -= 0.001;
+				}
+			}
+
+			if (robot->hand->fingerRot_X > 0 && !robot->hand->positiveTransform)
+			{
+				robot->hand->fingerRot_X -= robot->hand->fingerRot;
+				if (robot->hand->fingerZpos < -0.03) {
+					robot->hand->fingerZpos += 0.001;
+				}
+			}
+
+			if (robot->hand->thumbRotAngle->x < 90 && robot->hand->positiveTransform)
+			{
+				robot->hand->thumbRotAngle->x += robot->hand->thumbRot;
+			}
+			if (robot->hand->thumbRotAngle->x > 0 && !robot->hand->positiveTransform)
+			{
+				robot->hand->thumbRotAngle->x -= robot->hand->thumbRot;
+			}
+
+			if (robot->hand->thumbRotAngle->y < 30 && robot->hand->positiveTransform && robot->hand->thumbRotAngle->x > 60)
+			{
+				robot->hand->thumbRotAngle->y += robot->hand->thumbRot;
+			}
+			if (robot->hand->thumbRotAngle->y > 0 && !robot->hand->positiveTransform)
+			{
+				robot->hand->thumbRotAngle->y -= robot->hand->thumbRot;
+			}
+
+			if (robot->hand->thumbRotAngle->z < 45 && robot->hand->positiveTransform && robot->hand->thumbRotAngle->x > 45)
+			{
+				robot->hand->thumbRotAngle->z += robot->hand->thumbRot;
+			}
+			if (robot->hand->thumbRotAngle->z > 0 && !robot->hand->positiveTransform)
+			{
+				robot->hand->thumbRotAngle->z -= robot->hand->thumbRot;
+			}
 		}
 		
 		

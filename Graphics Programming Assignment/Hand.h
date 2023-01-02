@@ -4,6 +4,7 @@
 #include <gl/GLU.h>
 #include "Vector3.h"
 #include "Shapes.h"
+#include "Gun.h"
 
 #pragma comment (lib, "OpenGL32.lib")
 #pragma comment (lib, "GLU32.lib")
@@ -12,6 +13,7 @@
 class Hand
 {
 public:
+	Gun* gun = new Gun();
 
 	bool positiveTransform = true;
 	int walkSwing = 1;
@@ -31,6 +33,7 @@ public:
 	float sword_L = 0, sword_R = 0;
 	bool isSwordOpen_L = false, isSwordOpen_R = false;
 	float ringRot = 0;
+	bool isHoldingGun = false;
 	
 	void drawSwordPart(float swordLength);
 	void drawUpperArm(int hand_LR, Vector3 uArmRotAngle, Vector3 lArmRotAngle, Vector3 palmRotAngle, float swordLength);
@@ -44,5 +47,6 @@ public:
 	void draw();
 
 	void closeFinger();
+	void openFinger();
 };
 
