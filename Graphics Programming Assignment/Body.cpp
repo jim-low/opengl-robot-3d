@@ -1,38 +1,67 @@
 #include "Body.h"
 #include "Vector3.h"
 
+
+GLuint Body::loadtexture(LPCSTR filename) {
+	GLuint texture = 0;
+
+	//step 3
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+
+	HBITMAP hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL),
+		filename, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION |
+		LR_LOADFROMFILE);
+
+	GetObject(hBMP, sizeof(this->BMP), &BMP); //create object in memory to make handler refer to this object
+
+	//step 4
+	glEnable(GL_TEXTURE_2D);
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+		GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+		GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth,
+		BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+	DeleteObject(hBMP);
+
+	return texture;
+}
+
 void Body::drawBody() {
 	//  Upper
 	glPushMatrix();
 	glColor3f(1, 1, 1);
-	Shapes::drawCuboid(Vector3(-0.27, 0.2, 0), 0.54, 0.2, 0.2, GL_QUADS);
+	Shapes::drawCuboid(Vector3(-0.27, 0.2, 0), 0.54,0.3, 0.2, GL_QUADS);
 	glPopMatrix();
 
 	glPushMatrix();
 	glColor3f(1, 1, 1);
-	Shapes::drawCuboid(Vector3(-0.23, -0.1, 0), 0.46, 0.3, 0.2, GL_QUADS);
+	Shapes::drawCuboid(Vector3(-0.23, -0.2, 0), 0.46, 0.4, 0.2, GL_QUADS);
 	glPopMatrix();
 }
 
 void Body::drawFrontBody() {
 	glPushMatrix();
 	glColor3f(0, 0, 0);
-	Shapes::drawCuboid(Vector3(-0.2, -0.1, 0), 0.02, 0.1, -0.02, GL_QUADS);
+	Shapes::drawCuboid(Vector3(-0.2, -0.2, 0), 0.02, 0.2, -0.02, GL_QUADS);
 	Shapes::drawCuboid(Vector3(-0.25, 0, 0), 0.07, 0.02, -0.02, GL_QUADS);
 	glPushMatrix();
 	glTranslatef(0.05, 0.0, 0.0);
-	Shapes::drawCuboid(Vector3(-0.2, -0.1, 0), 0.02, 0.15, -0.02, GL_QUADS);
+	Shapes::drawCuboid(Vector3(-0.2, -0.2, 0), 0.02, 0.25, -0.02, GL_QUADS);
 	Shapes::drawCuboid(Vector3(-0.3, 0.05, 0), 0.12, 0.02, -0.02, GL_QUADS);
 	glPopMatrix();
 	glPopMatrix();
 
 	glPushMatrix();
 	glColor3f(0, 0, 0);
-	Shapes::drawCuboid(Vector3(0.18, -0.1, 0), 0.02, 0.1, -0.02, GL_QUADS);
+	Shapes::drawCuboid(Vector3(0.18, -0.2, 0), 0.02, 0.2, -0.02, GL_QUADS);
 	Shapes::drawCuboid(Vector3(0.18, 0, 0), 0.07, 0.02, -0.02, GL_QUADS);
 	glPushMatrix();
 	glTranslatef(-0.05, 0.0, 0.0);
-	Shapes::drawCuboid(Vector3(0.18, -0.1, 0), 0.02, 0.15, -0.02, GL_QUADS);
+	Shapes::drawCuboid(Vector3(0.18, -0.2, 0), 0.02, 0.25, -0.02, GL_QUADS);
 	Shapes::drawCuboid(Vector3(0.18, 0.05, 0), 0.12, 0.02, -0.02, GL_QUADS);
 	glPopMatrix();
 	glPopMatrix();
@@ -100,10 +129,6 @@ void Body::drawFrontBody() {
 }
 
 void Body::drawBackBody() {
-	glPushMatrix();
-	glTranslatef(0, 0.17, 0.2);
-	Shapes::drawSphere(0.1, 30, 30, GLU_FILL);
-	glPopMatrix();
 
 	glPushMatrix();
 	glColor3f(0, 0, 0);
@@ -139,18 +164,47 @@ void Body::drawRightBody() {
 
 void Body::drawArmor() {
 	glPushMatrix();
+	glTranslatef(0, 0.045, 0);
+	glPushMatrix();
 	glTranslatef(0.0, 0.17, -0.05);
 	glColor3f(0, 0, 0);
 	Shapes::drawCylinder(0.1, 0.1, 0.2, 30, 30, GLU_FILL);
+	glPushMatrix();
+	/*glRotatef(2, 0, 1, 0);*/
+	glColor3f(0, 0, 0);
+
+	for (int i = 0; i < 100; i++) {
+		Shapes::drawCylinder(0.1, 0.09, 0.2, 30, 30, GLU_FILL);
+	}
+	
+	glPopMatrix();
+	/*glPushMatrix();
+	glRotatef(-2, 0, 1, 0);
+	glColor3f(0, 0, 0);
+	Shapes::drawCylinder(0.1, 0.1, 0.2, 30, 30, GLU_FILL);
+	glPopMatrix();*/
+	textureArray[1] = loadtexture("Arc.png");
 	glPushMatrix();
 	glTranslatef(0, 0, 0.1);
 	glColor3f(1, 1, 1);
 	Shapes::drawSphere(0.099, 30, 30, GLU_FILL);
 	glPopMatrix();
 	glPopMatrix();
+	glDeleteTextures(1, &textureArray[1]);
+	glDisable(GL_TEXTURE_2D);
+
+
+	glPushMatrix();
+	glTranslatef(0, 0.17, 0.2);
+	glColor3f(0, 0, 0);
+	Shapes::drawSphere(0.1, 30, 30, GLU_FILL);
+	glPopMatrix();
+	glPopMatrix();
 }
 
 void Body::connectLeg() {
+	glPushMatrix();
+	glTranslatef(0, -0.1, 0);
 	glPushMatrix();
 	glColor3f(1, 0, 0);
 	Shapes::drawCuboid(Vector3(-0.23, -0.12, 0.0), 0.46, 0.02, 0.2, GL_QUADS);
@@ -159,6 +213,7 @@ void Body::connectLeg() {
 	glPushMatrix();
 	glColor3f(0, 1, 0);
 	Shapes::drawCuboid(Vector3(-0.02, -0.17, 0.0), 0.04, 0.05, 0.2, GL_QUADS);
+	glPopMatrix();
 	glPopMatrix();
 }
 
@@ -591,8 +646,6 @@ void Body::draw() {
 //	glVertex3f(0.16, 0.0, -0.1);
 //	glEnd();
 //}
-
-
 
 //void Body::draw() {
 //	drawFrontArmor();

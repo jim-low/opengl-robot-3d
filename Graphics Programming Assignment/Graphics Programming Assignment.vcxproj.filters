@@ -36,6 +36,9 @@
     <ClCompile Include="Robot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Gun.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Fire.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -62,8 +65,16 @@
     <ClInclude Include="Robot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Fire.h">
+    <ClInclude Include="Gun.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Box.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sky1.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

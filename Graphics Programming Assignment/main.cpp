@@ -9,6 +9,7 @@
 #include "Legs.h"
 #include "Head.h"
 #include "Robot.h"
+#include "Gun.h"
 
 #pragma comment (lib, "OpenGL32.lib")
 #pragma comment (lib, "GLU32.lib")
@@ -20,15 +21,31 @@ Hand* hand = new Hand();
 Legs* legs = new Legs();
 Head* head = new Head();
 Robot* robot = new Robot();
+Gun* gun = new Gun();
 
 // switch mode 1-head, 2-body, 3-hand, 4-leg
-int mode = 4;
+int mode = 0;
 
 // projection
 float objZ = 0.0f, objSpeed = 0.1f;		//	object translate in z-axis
 float oNear = -10.0f, oFar = 10.0f;			//	ortho near & far
 float ptx = 0.0f, pty = 0.0f, ptSpeed = 0.1f;	//	translation for projection
 float prx = 0.0f, pry = 0.0f, prSpeed = 5;			//	rotation for projection
+boolean isOrtho = true;
+
+//lighting and material
+float amb[] = { 0.6, 1.0, 0.6 }; //red ambient light source
+float dif[] = { 0.6, 1.0, 0.6 }; //red diffuse light source
+float posA[] = { 0.0, 0.4, 0.0 }; //ambient light from top 
+float posD[] = { 0.0, 0.4, 0.0 }; //diffsue light from right 
+
+float ambM[] = { 0.0, 1.0, 0.0 }; // red ambient material 
+float difM[] = { 0.0, 1.0, 0.0 }; // red diffuse material
+bool isLightOn = false;				//is light on?
+
+GLuint texture = 0;  //texture name
+BITMAP BMP;				//butmap structure
+HBITMAP hBMP = NULL;	//bitmap handler
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -62,12 +79,17 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		else if (wParam == 0x33) mode = 3;			// hand (zi heng)
 		else if (wParam == 0x34) mode = 4;			// legs (jim)
 		else if (wParam == 0x35) mode = 5;			// complete robot
+		else if (wParam == 0x36) mode = 6;
 		
 		switch (mode) {
 			case 1:
 				
 				break;
 			case 2:
+				if (wParam == 'L')			//L 
+				{
+					isLightOn = !isLightOn;
+				}
 				break;
 			case 3:
 				if (wParam == VK_SHIFT) {
@@ -83,48 +105,48 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 				}
 				// uppwerArm rotatation
 				else if (wParam == 'Z') {
-					if (hand->uArmRotAngle_L < 180 && hand->positiveTransform)
-						hand->uArmRotAngle_L += hand->uArmRot;
-					if (hand->uArmRotAngle_L > -30 && !hand->positiveTransform)
-						hand->uArmRotAngle_L -= hand->uArmRot;
+					if (hand->uArmRotAngle_L->y < 180 && hand->positiveTransform)
+						hand->uArmRotAngle_L->y += hand->uArmRot;
+					if (hand->uArmRotAngle_L->y > -30 && !hand->positiveTransform)
+						hand->uArmRotAngle_L->y -= hand->uArmRot;
 				}
 				else if (wParam == 'X') {
-					if (hand->uArmRotAngle_R < 190 && hand->positiveTransform)
-						hand->uArmRotAngle_R += hand->uArmRot;
-					if (hand->uArmRotAngle_R > -30 && !hand->positiveTransform)
-						hand->uArmRotAngle_R -= hand->uArmRot;
+					if (hand->uArmRotAngle_R->y < 190 && hand->positiveTransform)
+						hand->uArmRotAngle_R->y += hand->uArmRot;
+					if (hand->uArmRotAngle_R->y > -30 && !hand->positiveTransform)
+						hand->uArmRotAngle_R->y -= hand->uArmRot;
 				}
 				else if (wParam == 'C') {
-					if (hand->lArmRotAngle_L < 90 && hand->positiveTransform)
-						hand->lArmRotAngle_L += hand->lArmRot;
-					if (hand->lArmRotAngle_L > 0 && !hand->positiveTransform)
-						hand->lArmRotAngle_L -= hand->lArmRot;
+					if (hand->lArmRotAngle_L->y < 90 && hand->positiveTransform)
+						hand->lArmRotAngle_L->y += hand->lArmRot;
+					if (hand->lArmRotAngle_L->y > 0 && !hand->positiveTransform)
+						hand->lArmRotAngle_L->y -= hand->lArmRot;
 				}
 				else if (wParam == 'V') {
-					if (hand->lArmRotAngle_R < 90 && hand->positiveTransform)
-						hand->lArmRotAngle_R += hand->lArmRot;
-					if (hand->lArmRotAngle_R > 0 && !hand->positiveTransform)
-						hand->lArmRotAngle_R -= hand->lArmRot;
+					if (hand->lArmRotAngle_R->y < 90 && hand->positiveTransform)
+						hand->lArmRotAngle_R->y += hand->lArmRot;
+					if (hand->lArmRotAngle_R->y > 0 && !hand->positiveTransform)
+						hand->lArmRotAngle_R->y -= hand->lArmRot;
 				}
 				else if (wParam == 'B') {
-					if (hand->palmRotAngle_L < 90 && hand->positiveTransform)
-						hand->palmRotAngle_L += hand->palmRot;
-					if (hand->palmRotAngle_L > 0 && !hand->positiveTransform)
-						hand->palmRotAngle_L -= hand->palmRot;
+					if (hand->lArmRotAngle_L->z < 90 && hand->positiveTransform)
+						hand->lArmRotAngle_L->z += hand->palmRot;
+					if (hand->lArmRotAngle_L->z > 0 && !hand->positiveTransform)
+						hand->lArmRotAngle_L->z -= hand->palmRot;
 				}
 				else if (wParam == 'N') {
-					if (hand->palmRotAngle_R < 90 && hand->positiveTransform)
-						hand->palmRotAngle_R += hand->palmRot;
-					if (hand->palmRotAngle_R > 0 && !hand->positiveTransform)
-						hand->palmRotAngle_R -= hand->palmRot;
+					if (hand->lArmRotAngle_R->z < 90 && hand->positiveTransform)
+						hand->lArmRotAngle_R->z += hand->palmRot;
+					if (hand->lArmRotAngle_R->z > 0 && !hand->positiveTransform)
+						hand->lArmRotAngle_R->z -= hand->palmRot;
 				}
 				else if (wParam == 'Q') {			
-					hand->uArmRotAngle_R += hand->uArmRot * hand->walkSwing;
-					hand->uArmRotAngle_L -= hand->uArmRot * hand->walkSwing;
-					if (hand->uArmRotAngle_R == -45) {
+					hand->uArmRotAngle_R->y += hand->uArmRot * hand->walkSwing;
+					hand->uArmRotAngle_L->y -= hand->uArmRot * hand->walkSwing;
+					if (hand->uArmRotAngle_R->y == -45) {
 						hand->walkSwing = 1;
 					}
-					if (hand->uArmRotAngle_R == 45) {
+					if (hand->uArmRotAngle_R->y == 45) {
 						hand->walkSwing = -1;
 					}			
 				}
@@ -156,48 +178,48 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 				}
 				// uppwerArm rotatation
 				else if (wParam == 'Z') {
-					if (robot->hand->uArmRotAngle_L < 180 && robot->hand->positiveTransform)
-						robot->hand->uArmRotAngle_L += robot->hand->uArmRot;
-					if (robot->hand->uArmRotAngle_L > -30 && !robot->hand->positiveTransform)
-						robot->hand->uArmRotAngle_L -= robot->hand->uArmRot;
+					if (robot->hand->uArmRotAngle_L->y < 180 && robot->hand->positiveTransform)
+						robot->hand->uArmRotAngle_L->y += robot->hand->uArmRot;
+					if (robot->hand->uArmRotAngle_L->y > -30 && !robot->hand->positiveTransform)
+						robot->hand->uArmRotAngle_L->y -= robot->hand->uArmRot;
 				}
 				else if (wParam == 'X') {
-					if (robot->hand->uArmRotAngle_R < 190 && robot->hand->positiveTransform)
-						robot->hand->uArmRotAngle_R += robot->hand->uArmRot;
-					if (robot->hand->uArmRotAngle_R > -30 && !robot->hand->positiveTransform)
-						robot->hand->uArmRotAngle_R -= robot->hand->uArmRot;
+					if (robot->hand->uArmRotAngle_R->y < 190 && robot->hand->positiveTransform)
+						robot->hand->uArmRotAngle_R->y += robot->hand->uArmRot;
+					if (robot->hand->uArmRotAngle_R->y > -30 && !robot->hand->positiveTransform)
+						robot->hand->uArmRotAngle_R->y -= robot->hand->uArmRot;
 				}
 				else if (wParam == 'C') {
-					if (robot->hand->lArmRotAngle_L < 90 && robot->hand->positiveTransform)
-						robot->hand->lArmRotAngle_L += robot->hand->lArmRot;
-					if (robot->hand->lArmRotAngle_L > 0 && !robot->hand->positiveTransform)
-						robot->hand->lArmRotAngle_L -= robot->hand->lArmRot;
+					if (robot->hand->lArmRotAngle_L->y < 90 && robot->hand->positiveTransform)
+						robot->hand->lArmRotAngle_L->y += robot->hand->lArmRot;
+					if (robot->hand->lArmRotAngle_L->y > 0 && !robot->hand->positiveTransform)
+						robot->hand->lArmRotAngle_L->y -= robot->hand->lArmRot;
 				}
 				else if (wParam == 'V') {
-					if (robot->hand->lArmRotAngle_R < 90 && robot->hand->positiveTransform)
-						robot->hand->lArmRotAngle_R += robot->hand->lArmRot;
-					if (robot->hand->lArmRotAngle_R > 0 && !robot->hand->positiveTransform)
-						robot->hand->lArmRotAngle_R -= robot->hand->lArmRot;
+					if (robot->hand->lArmRotAngle_R->y < 90 && robot->hand->positiveTransform)
+						robot->hand->lArmRotAngle_R->y += robot->hand->lArmRot;
+					if (robot->hand->lArmRotAngle_R->y > 0 && !robot->hand->positiveTransform)
+						robot->hand->lArmRotAngle_R->y -= robot->hand->lArmRot;
 				}
 				else if (wParam == 'B') {
-					if (robot->hand->palmRotAngle_L < 90 && robot->hand->positiveTransform)
-						robot->hand->palmRotAngle_L += robot->hand->palmRot;
-					if (robot->hand->palmRotAngle_L > 0 && !robot->hand->positiveTransform)
-						robot->hand->palmRotAngle_L -= robot->hand->palmRot;
+					if (robot->hand->lArmRotAngle_L->z < 90 && robot->hand->positiveTransform)
+						robot->hand->lArmRotAngle_L->z += robot->hand->palmRot;
+					if (robot->hand->lArmRotAngle_L->z > 0 && !robot->hand->positiveTransform)
+						robot->hand->lArmRotAngle_L->z -= robot->hand->palmRot;
 				}
 				else if (wParam == 'N') {
-					if (robot->hand->palmRotAngle_R < 90 && robot->hand->positiveTransform)
-						robot->hand->palmRotAngle_R += robot->hand->palmRot;
-					if (robot->hand->palmRotAngle_R > 0 && !robot->hand->positiveTransform)
-						robot->hand->palmRotAngle_R -= robot->hand->palmRot;
+					if (robot->hand->lArmRotAngle_R->z < 90 && robot->hand->positiveTransform)
+						robot->hand->lArmRotAngle_R->z += robot->hand->palmRot;
+					if (robot->hand->lArmRotAngle_R->z > 0 && !robot->hand->positiveTransform)
+						robot->hand->lArmRotAngle_R->z -= robot->hand->palmRot;
 				}
 				else if (wParam == 'Q') {
-					robot->hand->uArmRotAngle_R += robot->hand->uArmRot * robot->hand->walkSwing;
-					robot->hand->uArmRotAngle_L -= robot->hand->uArmRot * robot->hand->walkSwing;
-					if (robot->hand->uArmRotAngle_R == -45) {
+					robot->hand->uArmRotAngle_R->y += robot->hand->uArmRot * robot->hand->walkSwing;
+					robot->hand->uArmRotAngle_L->y -= robot->hand->uArmRot * robot->hand->walkSwing;
+					if (robot->hand->uArmRotAngle_R->y == -45) {
 						robot->hand->walkSwing = 1;
 					}
-					if (robot->hand->uArmRotAngle_R == 45) {
+					if (robot->hand->uArmRotAngle_R->y == 45) {
 						robot->hand->walkSwing = -1;
 					}
 				}
@@ -212,6 +234,8 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 				else if (wParam == 'M') {
 					robot->hand->closeFinger();
 				}
+				break;
+			case 6:
 				break;
 			default:
 				break;
@@ -262,6 +286,51 @@ void projection() {
 	glRotatef(prx, 1, 0, 0);		//rotate in x
 }
 
+void lighting() {
+
+	if (isLightOn) {
+		glEnable(GL_LIGHTING);
+	}
+	else {
+		glDisable(GL_LIGHTING);
+	}
+
+
+	//light 0
+	glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
+	glLightfv(GL_LIGHT0, GL_POSITION, posA);
+	glEnable(GL_LIGHT0);
+
+	//light 1
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, dif);
+	glLightfv(GL_LIGHT1, GL_POSITION, posD);
+	glEnable(GL_LIGHT1);
+
+}
+
+GLuint loadTexture(LPCSTR imgName) {
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+	HBITMAP hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), imgName, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+	GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+	DeleteObject(hBMP);
+	return texture;
+}
+
+void background() {
+	loadTexture("Sky1.bmp");
+	glColor3f(1, 1, 1);
+	Shapes::drawPlane(Vector3(-1.1, 1.1, 0.7), Vector3(1.1, 1.1, 0.7), Vector3(1.1, -1.1, 0.7), Vector3(-1.1, -1.1, 0.7), GL_QUADS);
+	glDisable(GL_TEXTURE_2D);
+	glDeleteTextures(1, &texture);
+}
+
 void display()
 {
 	//projection();
@@ -275,6 +344,13 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0.9, 0.9, 0.1, 0);
+	glPushMatrix();
+	glLoadIdentity();
+	background();
+	glPopMatrix();
+	lighting();
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, difM);	//diffuse material
+
 
 	switch (mode) {
 	case 1:
@@ -291,6 +367,9 @@ void display()
 		break;
 	case 5:
 		robot->draw();
+		break;
+	case 6:
+		gun->draw();
 		break;
 	default:
 		break;
