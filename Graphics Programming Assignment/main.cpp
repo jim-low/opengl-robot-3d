@@ -78,19 +78,23 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			robot->robotDirection.x = -30;
 			robot->robotMovement.x += robot->movementSpeed;
 		}
+
 		else if (wParam == 'S') {
 			robot->robotDirection.y = 180;
 			robot->robotDirection.x = 0;
 			robot->robotMovement.z += robot->movementSpeed;
 		}
+
 		else if (wParam == 'W') {
 			robot->robotDirection.y = 0;
 			robot->robotDirection.x = 0;
 			robot->robotMovement.z -= robot->movementSpeed;
 		}
+
 		else if (wParam == VK_SHIFT) {
 			robot->hand->positiveTransform = !robot->hand->positiveTransform;
 		}
+
 		else if (wParam == VK_SPACE) {
 			robot->robotDirection = Vector3(0, 0, 0);
 			robot->robotMovement = Vector3(0, 0, 0);
