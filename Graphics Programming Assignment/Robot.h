@@ -22,7 +22,6 @@ public:
 	Legs* legs = new Legs();
 	Head* head = new Head();
 	Fire* fire = new Fire();
-	Gun* gun = new Gun();
 
 	Vector3 robotDirection = Vector3();
 	Vector3 robotMovement = Vector3();

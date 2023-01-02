@@ -31,47 +31,15 @@ Vector3* p8 = new Vector3();
 */
 
 void Hand::closeFinger() {
-	if (fingerRot_X < 50 && positiveTransform) {
-		fingerRot_X += fingerRot;
-		if (fingerZpos > -0.09) {
-			fingerZpos -= 0.001;
-		}
-	}
-		
-	if (fingerRot_X > 0 && !positiveTransform)
-	{
-		fingerRot_X -= fingerRot;
-		if (fingerZpos < -0.03) {
-			fingerZpos += 0.001;
-		}
-	}
+	fingerRot_X = 50;
+	fingerZpos = -0.09;
+	thumbRotAngle->setVector(90,30,45);
+}
 
-	if (thumbRotAngle->x < 90 && positiveTransform)
-	{
-		thumbRotAngle->x += thumbRot;
-	}
-	if (thumbRotAngle->x > 0 && !positiveTransform)
-	{
-		thumbRotAngle->x -= thumbRot;
-	}
-
-	if (thumbRotAngle->y < 30 && positiveTransform && thumbRotAngle->y > 60)
-	{
-		thumbRotAngle->y += thumbRot;
-	}
-	if (thumbRotAngle->y > 0 && !positiveTransform)
-	{
-		thumbRotAngle->y -= thumbRot;
-	}
-
-	if (thumbRotAngle->z < 45 && positiveTransform && thumbRotAngle->z > 45)
-	{
-		thumbRotAngle->z += thumbRot;
-	}
-	if (thumbRotAngle->z > 0 && !positiveTransform)
-	{
-		thumbRotAngle->z -= thumbRot;
-	}
+void Hand::openFinger() {
+	fingerRot_X = 0;
+	fingerZpos = -0.05;
+	thumbRotAngle->setVector(0, 0, 0);
 }
 
 void Hand::drawSwordPart(float swordLength) {
@@ -377,7 +345,7 @@ void Hand::drawPalm(int hand_LR, Vector3 palmRotAngle) {
 	glColor3f(0, 0, 0);
 	glLineWidth(2);
 	Shapes::drawCube(*p1, *p2, *p3, *p4, *p5, *p6, *p7, *p8, GL_LINE_LOOP);
-
+	
 	p1->setVector(-0.04, -0.06, -0.04);
 	p2->setVector(0.045, -0.06, -0.04);
 	p3->setVector(0.045, -0.06, -0.04);
@@ -398,6 +366,19 @@ void Hand::drawPalm(int hand_LR, Vector3 palmRotAngle) {
 	drawMiddleFinger();	// middle
 	drawRingFinger();	// ring
 	drawPinkyFinger();	// pinky
+
+	// Gun
+	if (isHoldingGun) {
+		glPushMatrix();
+		glScalef(0.8, 0.8, 0.8);
+		glRotatef(270, 1, 0, 0);
+		glRotatef(90, 0, 0, 1);
+
+		glTranslatef(0.06, 0.2, 0);
+		gun->draw();
+		glPopMatrix();
+	}
+
 
 	glPopMatrix();
 	glPopMatrix();
