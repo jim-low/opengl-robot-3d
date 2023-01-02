@@ -1,7 +1,10 @@
 #include "Head.h"
 
 void Head::draw() {
-	glRotatef(0.05, 0.0, 1.0, 0.0);
+	glPushMatrix();
+	glRotatef(headRotAngle->x, 0, 1, 0);
+	glRotatef(headRotAngle->y, 1, 0, 0);
+
 	drawFrontPlane();
 	drawFrontTopPlane();
 
@@ -14,6 +17,8 @@ void Head::draw() {
 	drawNeck();
 	drawAntenna1();
 	drawAntenna2();
+
+	glPopMatrix();
 }
 
 void Head::drawFrontPlane() {

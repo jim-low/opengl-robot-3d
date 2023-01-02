@@ -1,7 +1,53 @@
 #include "Gun.h"
 #include "Vector3.h"
 
+
 void Gun::draw() {
+	drawGun();
+
+	if (triggerShoot) {
+		isShot[bulletIndex] = true;
+		bulletIndex++;
+
+		if (bulletIndex == 9) {
+			bulletIndex = 0;
+		}
+		
+		triggerShoot = false;
+	}	
+
+	for (int i = 0; i < 10; i++) {
+		if (isShot[i]) {
+			if (bullet[i] <= 2) {
+				bullet[i] += 0.05;
+			}
+			else {
+				bullet[i] = 0;
+				isShot[i] = false;
+			}
+		}
+	}
+
+
+	/*if (bullet[bulletIndex] > 0 && bullet[bulletIndex] <= 2) {
+		bullet[bulletIndex] += 0.05;
+	}*/
+
+	
+}
+
+void Gun::drawBullet() {
+	//glColor3f(0.686, 0.607, 0.002);
+	glColor3f(0, 0, 0);
+	for (int i = 0; i < 10; i++) {
+		glPushMatrix();
+		glTranslatef(0, 0, bullet[i]);
+		Shapes::drawSphere(0.03, 30, 30, GLU_FILL);
+		glPopMatrix();
+	}
+}
+
+void Gun::drawGun() {
 	glPushMatrix();
 	glTranslatef(-0.15, 0.14, 0.05);
 	glColor3f(0, 0, 0);
@@ -34,5 +80,8 @@ void Gun::draw() {
 	Shapes::drawCylinder(0.04, 0.04, 0.15, 30, 30, GLU_FILL);
 	glColor3f(0, 0, 0);
 	Shapes::drawSphere(0.04, 30, 30, GLU_FILL);
+
+	drawBullet();
+
 	glPopMatrix();
 }

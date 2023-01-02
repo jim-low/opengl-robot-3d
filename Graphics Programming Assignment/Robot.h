@@ -26,6 +26,7 @@ public:
 	Vector3 robotDirection = Vector3();
 	Vector3 robotMovement = Vector3();
 	float movementSpeed = 0.03;
+	int spin = 0;
 
 	void draw();
 	void drawRobot();

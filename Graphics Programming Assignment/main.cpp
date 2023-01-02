@@ -22,9 +22,9 @@ Robot* robot = new Robot();
 float objZ = 0.0f, objSpeed = 0.1f;		//	object translate in z-axis
 float oNear = -10.0f, oFar = 10.0f;			//	ortho near & far
 float pNear = 1.0, pFar = 100.0; // perspective near & far
-float ptx = 0.0f, pty = 0.0f, ptSpeed = 0.1f;	//	translation for projection
+float ptx = 0.0f, pty = 0.0f, ptz, ptSpeed = 0.1f;	//	translation for projection
 float prx = 0.0f, pry = 0.0f, prSpeed = 5;			//	rotation for projection
-boolean isOrtho = false;
+boolean isOrtho = true;
 
 //lighting and material
 float amb[] = { 1.0, 0.6, 0.6 }; //red ambient light source
@@ -49,15 +49,17 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		break;
 	case WM_KEYDOWN:
 		if (wParam == VK_ESCAPE) PostQuitMessage(0);
-		if (wParam == VK_UP) {					// move obj up
-			if (objZ > oNear) {
-				objZ -= objSpeed;
-			}
+		if (wParam == VK_UP) {					
+			robot->robotDirection.x += 1;
 		}
-		else if (wParam == VK_DOWN) {				// move obj down
-			if (objZ < oFar) {
-				objZ += objSpeed;
-			}
+		else if (wParam == VK_DOWN) {				
+			robot->robotDirection.x -= 1;
+		}
+		if (wParam == VK_LEFT) {
+			robot->robotDirection.y += 1;
+		}
+		if (wParam == VK_RIGHT) {
+			robot->robotDirection.y -= 1;
 		}
 		//else if (wParam == 'A') ptx -= ptSpeed;		//-------------------------
 		//else if (wParam == 'D') ptx += ptSpeed;		// projecttion translation
@@ -76,26 +78,34 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		}
 
 		if (wParam == 'A') {
-			robot->robotDirection.y = 90;
-			robot->robotDirection.x = 330;
+			if (!robot->spin) {
+				robot->robotDirection.y = 90;
+				robot->robotDirection.x = 350;
+			}		
 			robot->robotMovement.x -= robot->movementSpeed;
 		}
 
 		else if (wParam == 'D') {
-			robot->robotDirection.y = -90;
-			robot->robotDirection.x = -30;
+			if (!robot->spin) {
+				robot->robotDirection.y = -90;
+				robot->robotDirection.x = -10;
+			}
 			robot->robotMovement.x += robot->movementSpeed;
 		}
 
 		else if (wParam == 'S') {
-			robot->robotDirection.y = 180;
-			robot->robotDirection.x = 0;
+			if (!robot->spin) {
+				robot->robotDirection.y = 180;
+				robot->robotDirection.x = 0;
+			}
 			robot->robotMovement.z += robot->movementSpeed;
 		}
 
 		else if (wParam == 'W') {
-			robot->robotDirection.y = 0;
-			robot->robotDirection.x = 0;
+			if (!robot->spin) {
+				robot->robotDirection.y = 0;
+				robot->robotDirection.x = 0;
+			}
 			robot->robotMovement.z -= robot->movementSpeed;
 		}
 
@@ -165,21 +175,27 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			robot->hand->uArmRotAngle_R->y = 0;
 			robot->hand->lArmRotAngle_L->z = 0;
 			robot->hand->lArmRotAngle_R->z = 0;
-			robot->hand->uArmRotAngle_R->x += robot->hand->uArmRot * robot->hand->walkSwing;
-			robot->hand->uArmRotAngle_L->x -= robot->hand->uArmRot * robot->hand->walkSwing;
-			if (robot->hand->uArmRotAngle_R->x == 0) {
+			if (robot->hand->uArmRotAngle_R->x < 90) {
+				robot->hand->uArmRotAngle_R->x += robot->hand->uArmRot * robot->hand->walkSwing;
+			}
+			if (robot->hand->uArmRotAngle_L->x >-90) {
+				robot->hand->uArmRotAngle_L->x -= robot->hand->uArmRot * robot->hand->walkSwing;
+			}
+			if (robot->hand->uArmRotAngle_R->x <= 0) {
 				robot->hand->walkSwing = 1;
 			}
-			if (robot->hand->uArmRotAngle_R->x == 60) {
+			if (robot->hand->uArmRotAngle_R->x >= 60) {
 				robot->hand->walkSwing = -1;
 			}
 			robot->robotMovement.y += robot->movementSpeed;
 		}
 		else if (wParam == 'Q') {
-			robot->hand->uArmRotAngle_L->y = 180;
-			robot->hand->uArmRotAngle_R->y = 180;
-			robot->hand->lArmRotAngle_L->z = -90;
-			robot->hand->lArmRotAngle_R->z = -90;
+			if (!robot->spin) {
+				robot->hand->uArmRotAngle_L->y = 180;
+				robot->hand->uArmRotAngle_R->y = 180;
+				robot->hand->lArmRotAngle_L->z = -90;
+				robot->hand->lArmRotAngle_R->z = -90;
+			}			
 			robot->robotMovement.y -= robot->movementSpeed;
 			robot->legs->fireScale = Vector3();
 		}
@@ -241,7 +257,7 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 				robot->hand->thumbRotAngle->z -= robot->hand->thumbRot;
 			}
 		}
-		else if (wParam == 'F') {
+		else if (wParam == 'R') {
 			isLightOn = !isLightOn;
 		}
 		else if (wParam == 0x34)
@@ -259,6 +275,48 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			glEnable(GL_LIGHT0);
 			glEnable(GL_LIGHT1);
 		}
+		else if (wParam == 'T')
+		{
+			if(robot->head->headRotAngle->y > -20)
+				robot->head->headRotAngle->y -= robot->head->headRot;
+		}
+		else if (wParam == 'G')
+		{
+			if (robot->head->headRotAngle->y < 10)
+				robot->head->headRotAngle->y += robot->head->headRot;
+		}
+		else if (wParam == 'F')
+		{
+			if (robot->head->headRotAngle->x < 30)
+				robot->head->headRotAngle->x += robot->head->headRot;
+		}
+		else if (wParam == 'H')
+		{
+			if (robot->head->headRotAngle->x > -30)
+				robot->head->headRotAngle->x -= robot->head->headRot;
+		}
+
+		else if (wParam == 'Y')
+		{
+			robot->spin = 1;
+		}
+		else if (wParam == 'U')
+		{
+			robot->spin = 2;
+		}
+		else if (wParam == 0x30)
+		{
+			robot->hand->gun->triggerShoot = true;
+		}
+		else if (wParam == 0x37)
+		{
+			ptz += ptSpeed;
+		}
+		else if (wParam == 0x38)
+		{
+			ptz -= ptSpeed;
+		}
+
 		break;
 		
 		
@@ -310,7 +368,7 @@ void projection() {
 		glFrustum(-10.0, 10.0, -10.0, 10.0, pNear, pFar);
 	}
 
-	glTranslatef(ptx, pty, 0);	//translate in x and y for projection
+	glTranslatef(ptx, pty, ptz);	//translate in x and y for projection
 	glRotatef(pry, 0, 1, 0);		//rotate in y
 	glRotatef(prx, 1, 0, 0);		//rotate in x
 }
@@ -356,7 +414,7 @@ GLuint loadTexture(LPCSTR imgName) {
 void background() {
 	loadTexture("Sky1.bmp");
 	glColor3f(1, 1, 1);
-	Shapes::drawPlane(Vector3(-1.1, 1.1, 0.4), Vector3(1.1, 1.1, 0.4), Vector3(1.1, -1.1, 0.4), Vector3(-1.1, -1.1, 0.4), GL_QUADS);
+	Shapes::drawPlane(Vector3(-1.1, 1.1, 0.7), Vector3(1.1, 1.1, 0.7), Vector3(1.1, -1.1, 0.7), Vector3(-1.1, -1.1, 0.7), GL_QUADS);
 	glDisable(GL_TEXTURE_2D);
 	glDeleteTextures(1, &texture);
 }
