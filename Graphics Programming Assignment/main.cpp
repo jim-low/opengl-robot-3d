@@ -21,9 +21,10 @@ Robot* robot = new Robot();
 // projection
 float objZ = 0.0f, objSpeed = 0.1f;		//	object translate in z-axis
 float oNear = -10.0f, oFar = 10.0f;			//	ortho near & far
+float pNear = 1.0, pFar = 100.0; // perspective near & far
 float ptx = 0.0f, pty = 0.0f, ptSpeed = 0.1f;	//	translation for projection
 float prx = 0.0f, pry = 0.0f, prSpeed = 5;			//	rotation for projection
-boolean isOrtho = true;
+boolean isOrtho = false;
 
 //lighting and material
 float amb[] = { 0.6, 1.0, 0.6 }; //red ambient light source
@@ -66,6 +67,13 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		else if (wParam == 'K') prx += prSpeed;		// projection rotation
 		else if (wParam == 'J') pry -= prSpeed;		// (I,J,K,L)
 		else if (wParam == 'L') pry += prSpeed;		//-------------------------
+
+		if (wParam == 'O') {
+			isOrtho = true;
+		}
+		else if (wParam == 'P') {
+			isOrtho = false;
+		}
 
 		if (wParam == 'A') {
 			robot->robotDirection.y = 90;
@@ -226,6 +234,16 @@ void projection() {
 	glTranslatef(ptx, pty, 0);	//translate in x and y for projection
 	glRotatef(pry, 0, 1, 0);		//rotate in y
 	glRotatef(prx, 1, 0, 0);		//rotate in x
+
+	if (isOrtho)
+	{
+		glOrtho(1.0, 1.0, 1.0, 1.0, oNear, oFar);
+	}
+	else
+	{
+		gluPerspective(10, 1, -10.0, 10.0);
+		glFrustum(-10.0, 10.0, -10.0, 10.0, pNear, pFar);
+	}
 }
 
 void lighting() {
@@ -255,12 +273,12 @@ GLuint loadTexture(LPCSTR imgName) {
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 	HBITMAP hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), imgName, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
 	GetObject(hBMP, sizeof(BMP), &BMP);
-		glEnable(GL_TEXTURE_2D);
-		glGenTextures(1, &texture);
-		glBindTexture(GL_TEXTURE_2D, texture);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+	glEnable(GL_TEXTURE_2D);
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
 	DeleteObject(hBMP);
 	return texture;
 }
@@ -275,29 +293,24 @@ void background() {
 
 void display()
 {
-	//projection();
+	projection();
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glTranslatef(0, 0, objZ);		//zoom in and out
-	glRotatef(pry, 0, 1, 0);		//rotate in y
-	glRotatef(prx, 1, 0, 0);		//rotate in x
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0.9, 0.9, 0.1, 0);
+
 	glPushMatrix();
 	glLoadIdentity();
 	background();
 	glPopMatrix();
+
 	lighting();
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, difM);	//diffuse material
 
-
-
-		robot->draw();
-
-	
+	robot->draw();
 }
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
@@ -327,6 +340,8 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 
 	MSG msg;
 	ZeroMemory(&msg, sizeof(msg));
+
+	//projection();
 
 	while (true)
 	{
