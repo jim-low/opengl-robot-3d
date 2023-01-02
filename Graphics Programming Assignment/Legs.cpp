@@ -4,19 +4,13 @@ void Legs::draw() {
 
 	float scaling = 0.8;
 	glScalef(scaling, scaling, scaling);
-	glTranslatef(0, 0.9, 0); // just to move the model up so can see better
+	//glTranslatef(0, 0.9, 0); // just to move the model up so can see better
 
-	//drawBelt();
+	//drawQuads();
 
-	drawQuads();
-
-	drawShin();
+	//drawShin();
 
 	drawFoot();
-}
-
-void Legs::drawBelt()
-{
 }
 
 void Legs::drawQuads()
@@ -124,5 +118,15 @@ void Legs::drawShin()
 void Legs::drawFoot()
 {
 	glPushMatrix();
+	Shapes::drawCube(
+		Vector3(),
+		Vector3(),
+		Vector3(),
+		Vector3(),
+		Vector3(),
+		Vector3(),
+		Vector3(),
+		Vector3(),
+		GL_LINE_LOOP);
 	glPopMatrix();
 }
