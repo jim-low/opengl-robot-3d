@@ -19,8 +19,3 @@ void Fire::draw()
 	);
 	glPopMatrix();
 }
-
-void Fire::calculateTrajectory()
-{
-	// this shit need to work on
-}
