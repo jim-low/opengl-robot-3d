@@ -9,6 +9,7 @@
 #include "Legs.h"
 #include "Head.h"
 #include "Robot.h"
+#include "Gun.h"
 
 #pragma comment (lib, "OpenGL32.lib")
 #pragma comment (lib, "GLU32.lib")
@@ -20,6 +21,7 @@ Hand* hand = new Hand();
 Legs* legs = new Legs();
 Head* head = new Head();
 Robot* robot = new Robot();
+Gun* gun = new Gun();
 
 // switch mode 1-head, 2-body, 3-hand, 4-leg
 int mode = 4;
@@ -45,8 +47,6 @@ GLuint texture = 0;  //texture name
 BITMAP BMP;				//butmap structure
 HBITMAP hBMP = NULL;	//bitmap handler
 GLuint textureArray[10];
-
-
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -80,6 +80,7 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		else if (wParam == 0x33) mode = 3;			// hand (zi heng)
 		else if (wParam == 0x34) mode = 4;			// legs (jim)
 		else if (wParam == 0x35) mode = 5;			// complete robot
+		else if (wParam == 0x36) mode = 6;
 		
 		switch (mode) {
 			case 1:
@@ -235,6 +236,8 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 					robot->hand->closeFinger();
 				}
 				break;
+			case 6:
+				break;
 			default:
 				break;
 		}
@@ -306,6 +309,34 @@ void lighting() {
 
 }
 
+GLuint loadtexture(LPCSTR filename) {
+	GLuint texture = 0;
+
+	//step 3
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+
+	HBITMAP hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL),
+		filename, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION |
+		LR_LOADFROMFILE);
+
+	GetObject(hBMP, sizeof(BMP), &BMP); //create object in memory to make handler refer to this object
+
+	//step 4
+	glEnable(GL_TEXTURE_2D);
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+		GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+		GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth,
+		BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+	DeleteObject(hBMP);
+
+	return texture;
+}
+
 void display()
 {
 	//projection();
@@ -338,6 +369,9 @@ void display()
 		break;
 	case 5:
 		robot->draw();
+		break;
+	case 6:
+		gun->draw();
 		break;
 	default:
 		break;
