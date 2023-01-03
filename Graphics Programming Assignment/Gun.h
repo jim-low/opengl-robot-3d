@@ -12,5 +12,13 @@
 class Gun
 {
 public:
+	float bullet[10];
+	bool isShot[10];
+	int bulletIndex = 0;
+	bool triggerShoot = false;
+
 	void draw();
+	void drawGun();
+	void drawBullet();
+	void shoot();
 };

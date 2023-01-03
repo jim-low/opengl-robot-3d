@@ -547,11 +547,11 @@ void Hand::draw()
 	
 	if (isSwordOpen_L) {
 		if(sword_L > -1)
-			sword_L -= 0.001;
+			sword_L -= 0.01;
 	}
 	else {
 		if (sword_L < 0)
-			sword_L += 0.001;
+			sword_L += 0.01;
 	}
 	drawUpperArm(0, *uArmRotAngle_L, *lArmRotAngle_L, *palmRotAngle_L, sword_L);
 
@@ -560,11 +560,11 @@ void Hand::draw()
 
 	if (isSwordOpen_R) {
 		if (sword_R > -1)
-			sword_R -= 0.001;
+			sword_R -= 0.01;
 	}
 	else {
 		if (sword_R < 0)
-			sword_R += 0.001;
+			sword_R += 0.01;
 	}
 	drawUpperArm(1, *uArmRotAngle_R, *lArmRotAngle_R, *palmRotAngle_R, sword_R);
 	glPopMatrix();

@@ -12,6 +12,9 @@
 class Head
 {
 public:
+	Vector3* headRotAngle = new Vector3();
+	float headRot = 0.5;
+
 	void draw();
 	void drawFrontPlane();
 	void drawFrontTopPlane();

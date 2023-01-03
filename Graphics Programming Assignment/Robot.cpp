@@ -2,6 +2,7 @@
 
 void Robot::draw() {
 	glPushMatrix();
+
 	glTranslatef(robotMovement.x, robotMovement.y, robotMovement.z);
 	glRotatef(robotDirection.y, 0, 1, 0);
 	glRotatef(robotDirection.x, 1, 0, 0);
@@ -11,6 +12,32 @@ void Robot::draw() {
 
 	drawRobot();
 	glPopMatrix();
+
+	if (spin == 1) {
+		hand->isSwordOpen_L = true;
+		hand->isSwordOpen_R = true;
+		if (hand->uArmRotAngle_R->x < 90) {
+			hand->uArmRotAngle_R->x += 0.5;
+			hand->uArmRotAngle_L->x -= 0.5;
+		}
+		if (hand->uArmRotAngle_R->x >= 90) {
+			robotDirection.y += 5;
+		}
+		hand->closeFinger();
+	}
+	else if(spin == 2){
+		hand->isSwordOpen_L = false;
+		hand->isSwordOpen_R = false;
+		if (hand->uArmRotAngle_R->x > 0) {
+			hand->uArmRotAngle_R->x -= 0.5;
+			hand->uArmRotAngle_L->x += 0.5;
+		}
+		hand->openFinger();
+
+		if (hand->uArmRotAngle_R->x <= 0) {
+			spin = 0;
+		}
+	}
 }
 
 void Robot::drawRobot() {
