@@ -332,10 +332,9 @@ void lighting() {
 	glEnable(GL_LIGHT0);
 
 	//light 1
-	glLightfv(GL_LIGHT1, GL_DIFFUSE, dif);
-	glLightfv(GL_LIGHT1, GL_POSITION, posD);
-	glEnable(GL_LIGHT1);
-
+	//glLightfv(GL_LIGHT1, GL_DIFFUSE, dif);
+	//glLightfv(GL_LIGHT1, GL_POSITION, posD);
+	//glEnable(GL_LIGHT1);
 }
 
 GLuint loadTexture(LPCSTR imgName) {
