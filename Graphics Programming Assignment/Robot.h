@@ -25,6 +25,7 @@ public:
 
 	Vector3 robotDirection = Vector3();
 	Vector3 robotMovement = Vector3();
+	Vector3 color = Vector3();
 	float movementSpeed = 0.03;
 
 	void draw();

@@ -36,6 +36,8 @@ float ambM[] = { 0.0, 1.0, 0.0 }; // red ambient material
 float difM[] = { 1.0, 0.0, 0.0 }; // red diffuse material
 bool isLightOn = false;				//is light on?
 
+int color = 0;
+
 GLuint texture = 0;  //texture name
 BITMAP BMP;				//butmap structure
 HBITMAP hBMP = NULL;	//bitmap handler
@@ -193,7 +195,7 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			robot->hand->isHoldingGun = !robot->hand->isHoldingGun;
 			if (robot->hand->isHoldingGun)
 				robot->hand->closeFinger();
-			else 
+			else
 				robot->hand->openFinger();
 		}
 
@@ -259,9 +261,26 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			glEnable(GL_LIGHT0);
 			glEnable(GL_LIGHT1);
 		}
+		else if(wParam == VK_CONTROL) {
+		color++;
+			switch (color) {
+			case 0:
+				robot->color.setVector(0, 0, 0);
+				break;
+			case 1:
+				robot->color.setVector(0, 0, 1);
+				break;
+
+			default:
+				break;
+			}
+		}	
+
+		color++;
+
 		break;
-		
-		
+
+
 	}
 
 	return DefWindowProc(hWnd, msg, wParam, lParam);
@@ -316,8 +335,8 @@ void projection() {
 }
 
 
-void lighting() {
-
+void lighting()
+{
 	if (isLightOn) {
 		glEnable(GL_LIGHTING);
 	}
@@ -332,9 +351,9 @@ void lighting() {
 	glEnable(GL_LIGHT0);
 
 	//light 1
-	//glLightfv(GL_LIGHT1, GL_DIFFUSE, dif);
-	//glLightfv(GL_LIGHT1, GL_POSITION, posD);
-	//glEnable(GL_LIGHT1);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, dif);
+	glLightfv(GL_LIGHT1, GL_POSITION, posD);
+	glEnable(GL_LIGHT1);
 }
 
 GLuint loadTexture(LPCSTR imgName) {
